@@ -1,7 +1,7 @@
 const db = require('../connection.js');
 
 const format = require("pg-format");
-const { formatCategoryData, formatUserData } = require('../utils/data-manipulation.js');
+const { formatCategoryData, formatUserData, formatReviewData } = require('../utils/data-manipulation.js');
 
 const seed = async(data) => {
   const { categoryData, commentData, reviewData, userData } = data;
@@ -43,7 +43,7 @@ const seed = async(data) => {
     CREATE TABLE reviews (
       review_id SERIAL PRIMARY KEY,
       title VARCHAR(250) NOT NULL,
-      review_body VARCHAR(600) NOT NULL,
+      review_body VARCHAR(1200) NOT NULL,
       designer VARCHAR(100),
       review_img_url VARCHAR(500) DEFAULT 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
       votes NUMERIC DEFAULT 0,
@@ -104,7 +104,21 @@ const seed = async(data) => {
   const insertUsers = await db.query(queryStrUsers);
   console.log('INSERT INTO users \n',insertUsers.rows[0]);
 
-  
+  //---------Insert into Categories Table ------------------
+
+  const formattedReviews = formatReviewData(reviewData);
+  const queryStrReviews = format (
+    `
+    INSERT INTO reviews
+    (title, review_body, designer, review_img_url,votes, category, owner, created_at)
+    VALUES
+    %L
+    RETURNING *;
+    `,
+    formattedReviews
+  );
+  const insertReviews = await db.query(queryStrReviews);
+  console.log('INSERT INTO reviews \n',insertReviews.rows[0]);
 
 };
 
