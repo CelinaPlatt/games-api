@@ -30,3 +30,15 @@ exports.formatReviewData = (reviewData) => {
     return formattedReviews;
 };
 
+exports.formatCommentData = (commentData) => {
+    const formattedComments = commentData.map((comment)=>{
+        return [
+            comment.author,
+            comment.review_id,
+            comment.votes,
+            comment.created_at,
+            comment.body
+        ];
+    })
+    return formattedComments;
+}

@@ -1,7 +1,7 @@
 const db = require('../connection.js');
 
 const format = require("pg-format");
-const { formatCategoryData, formatUserData, formatReviewData } = require('../utils/data-manipulation.js');
+const { formatCategoryData, formatUserData, formatReviewData, formatCommentData } = require('../utils/data-manipulation.js');
 
 const seed = async(data) => {
   const { categoryData, commentData, reviewData, userData } = data;
@@ -64,7 +64,7 @@ const seed = async(data) => {
       author VARCHAR(100) REFERENCES users(username) NOT  NULL,
       review_id INTEGER REFERENCES reviews(review_id),
       votes NUMERIC DEFAULT 0,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       body VARCHAR(600) NOT NULL
     );
     `
@@ -74,6 +74,7 @@ const seed = async(data) => {
   // 2. insert data
 
   //---------Insert into Categories Table ------------------
+
   const formattedCategories = formatCategoryData(categoryData);
   const queryStrCategories = format (
   `
@@ -119,6 +120,22 @@ const seed = async(data) => {
   );
   const insertReviews = await db.query(queryStrReviews);
   console.log('INSERT INTO reviews \n',insertReviews.rows[0]);
+
+  // ---------Insert into Categories Table ------------------
+
+  const formattedComments = formatCommentData(commentData);
+  const queryStrComments = format (
+    `
+    INSERT INTO comments
+    (author, review_id, votes, created_at, body)
+    VALUES
+    %L
+    RETURNING *;
+    `,
+    formattedComments
+  );
+  const insertComments = await db.query(queryStrComments);
+  console.log('INSERT INTO comments \n',insertComments.rows[0]);
 
 };
 

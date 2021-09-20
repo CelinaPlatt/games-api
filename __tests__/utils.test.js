@@ -1,4 +1,4 @@
-const {formatCategoryData, formatUserData, formatReviews, formatReviewData} = require('../db/utils/data-manipulation');
+const {formatCategoryData, formatUserData, formatReviews, formatReviewData, formatCommentData} = require('../db/utils/data-manipulation');
 
 describe('formatCategoryData', () => {
     it('returns an array of arrays, when passed an array of objects', () => {
@@ -193,6 +193,79 @@ describe('formatReviewData', () => {
                 category: 'dexterity',
                 created_at: new Date(1610964101251),
                 votes: 5
+            }
+        ];
+       formatUserData(input);
+       expect(input).toEqual(copyInput); 
+    });
+});
+
+describe('formatCommentData', () => {
+    it('returns an array with array, when passed an array with an object', () => {
+        const input = [
+            {
+            body: 'My dog loved this game too!',
+            votes: 13,
+            author: 'mallionaire',
+            review_id: 3,
+            created_at: new Date(1610964545410),
+          },
+        ];
+        const actualOutput = formatCommentData(input);
+        expect(Array.isArray(actualOutput[0])).toBe(true);
+    });
+    it('returns an array with a comment array,containing the values of the author, review_id, votes, created_at and body properties when passed an array with a comment object', () => {
+        const input = [
+            {
+                body: 'My dog loved this game too!',
+                votes: 13,
+                author: 'mallionaire',
+                review_id: 3,
+                created_at: new Date(1610964545410),
+              },
+        ];
+        const expectedOutput = [
+            [
+                'mallionaire',
+                3,
+                13,
+                new Date(1610964545410),
+                'My dog loved this game too!'
+            ]
+        ];
+        const actualOutput = formatCommentData(input);
+        expect(actualOutput).toEqual(expectedOutput);   
+    });
+    it('returns a new array', () => {
+        const input = [
+            {
+                body: 'My dog loved this game too!',
+                votes: 13,
+                author: 'mallionaire',
+                review_id: 3,
+                created_at: new Date(1610964545410),
+            }
+        ];
+        const actualOutput = formatCommentData(input);
+        expect(actualOutput).not.toBe(input); 
+    });
+    it('does not mutate input', () => {
+        const input = [
+            {
+                body: 'My dog loved this game too!',
+                votes: 13,
+                author: 'mallionaire',
+                review_id: 3,
+                created_at: new Date(1610964545410),
+            }
+        ];
+        const copyInput = [
+            {
+                body: 'My dog loved this game too!',
+                votes: 13,
+                author: 'mallionaire',
+                review_id: 3,
+                created_at: new Date(1610964545410),
             }
         ];
        formatUserData(input);
