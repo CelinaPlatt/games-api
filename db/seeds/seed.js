@@ -1,6 +1,7 @@
 const db = require('../connection.js');
 
 const format = require("pg-format");
+const { formatCategoryData } = require('../utils/data-manipulation.js');
 
 const seed = async(data) => {
   const { categoryData, commentData, reviewData, userData } = data;
@@ -61,9 +62,20 @@ const seed = async(data) => {
   );
   console.log(createCommentsTable.command + ' comments')
 
-
- 
-  // // 2. insert data
+  // 2. insert data
+  const formattedCategories = formatCategoryData(categoryData);
+  const queryStrCategories = format (
+  `
+  INSERT INTO categories
+  (slug,description)
+  VALUES
+  %L
+  RETURNING *;
+  `,
+  formattedCategories
+);
+  const insertCategories = await db.query(queryStrCategories);
+  console.log('INSERT INTO categories \n',insertCategories.rows[0]);
 };
 
 module.exports = seed;
