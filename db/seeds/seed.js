@@ -1,7 +1,7 @@
 const db = require('../connection.js');
 
 const format = require("pg-format");
-const { formatCategoryData } = require('../utils/data-manipulation.js');
+const { formatCategoryData, formatUserData } = require('../utils/data-manipulation.js');
 
 const seed = async(data) => {
   const { categoryData, commentData, reviewData, userData } = data;
@@ -10,6 +10,9 @@ const seed = async(data) => {
   console.log(dropTables.command + ' all tables');
 
   // 1. create tables
+
+  //---------Categories Table ------------------
+
   const createCategoryTable = await db.query(
     `
     CREATE TABLE categories (
@@ -19,6 +22,8 @@ const seed = async(data) => {
     `
   );
   console.log(createCategoryTable.command + ' categories')
+
+  //---------Users Table ------------------
 
   const createUsersTable = await db.query(
     `
@@ -30,6 +35,8 @@ const seed = async(data) => {
     `
   );
   console.log(createUsersTable.command + ' users')
+
+  //---------Reviews Table ------------------
 
   const createReviewsTable = await db.query(
     `
@@ -48,6 +55,8 @@ const seed = async(data) => {
   );
   console.log(createReviewsTable.command + ' reviews')
 
+  //---------Comments Table ------------------
+
   const createCommentsTable = await db.query(
     `
     CREATE TABLE comments (
@@ -63,6 +72,8 @@ const seed = async(data) => {
   console.log(createCommentsTable.command + ' comments')
 
   // 2. insert data
+
+  //---------Insert into Categories Table ------------------
   const formattedCategories = formatCategoryData(categoryData);
   const queryStrCategories = format (
   `
@@ -73,9 +84,28 @@ const seed = async(data) => {
   RETURNING *;
   `,
   formattedCategories
-);
+  );
   const insertCategories = await db.query(queryStrCategories);
   console.log('INSERT INTO categories \n',insertCategories.rows[0]);
+
+  //---------Insert into Categories Table ------------------
+
+  const formattedUsers = formatUserData(userData);
+  const queryStrUsers = format (
+    `
+    INSERT INTO users
+    (username,name,avatar_url)
+    VALUES
+    %L
+    RETURNING *;
+    `,
+    formattedUsers
+  );
+  const insertUsers = await db.query(queryStrUsers);
+  console.log('INSERT INTO users \n',insertUsers.rows[0]);
+
+  
+
 };
 
 module.exports = seed;
