@@ -7,7 +7,7 @@ const seed = async(data) => {
   const { categoryData, commentData, reviewData, userData } = data;
   // Drop tables if exist
   const dropTables = await db.query(`DROP TABLE IF EXISTS categories,users,reviews,comments;`);
-  console.log(dropTables.command + ' all tables');
+  // console.log(dropTables.command + ' all tables');
 
   // 1. create tables
 
@@ -21,7 +21,7 @@ const seed = async(data) => {
     );
     `
   );
-  console.log(createCategoryTable.command + ' categories')
+  // console.log(createCategoryTable.command + ' categories')
 
   //---------Users Table ------------------
 
@@ -34,7 +34,7 @@ const seed = async(data) => {
     );
     `
   );
-  console.log(createUsersTable.command + ' users')
+  // console.log(createUsersTable.command + ' users')
 
   //---------Reviews Table ------------------
 
@@ -53,7 +53,7 @@ const seed = async(data) => {
     );
     `
   );
-  console.log(createReviewsTable.command + ' reviews')
+  // console.log(createReviewsTable.command + ' reviews')
 
   //---------Comments Table ------------------
 
@@ -69,7 +69,7 @@ const seed = async(data) => {
     );
     `
   );
-  console.log(createCommentsTable.command + ' comments')
+  // console.log(createCommentsTable.command + ' comments')
 
   // 2. insert data
 
@@ -87,7 +87,7 @@ const seed = async(data) => {
   formattedCategories
   );
   const insertCategories = await db.query(queryStrCategories);
-  console.log('INSERT INTO categories \n',insertCategories.rows[0]);
+  // console.log('INSERT INTO categories \n',insertCategories.rows[0]);
 
   //---------Insert into Categories Table ------------------
 
@@ -103,7 +103,7 @@ const seed = async(data) => {
     formattedUsers
   );
   const insertUsers = await db.query(queryStrUsers);
-  console.log('INSERT INTO users \n',insertUsers.rows[0]);
+  // console.log('INSERT INTO users \n',insertUsers.rows[0]);
 
   //---------Insert into Categories Table ------------------
 
@@ -119,7 +119,7 @@ const seed = async(data) => {
     formattedReviews
   );
   const insertReviews = await db.query(queryStrReviews);
-  console.log('INSERT INTO reviews \n',insertReviews.rows[0]);
+  // console.log('INSERT INTO reviews \n',insertReviews.rows[0]);
 
   // ---------Insert into Categories Table ------------------
 
@@ -135,7 +135,7 @@ const seed = async(data) => {
     formattedComments
   );
   const insertComments = await db.query(queryStrComments);
-  console.log('INSERT INTO comments \n',insertComments.rows[0]);
+  // console.log('INSERT INTO comments \n',insertComments.rows[0]);
 
 };
 
