@@ -1,8 +1,9 @@
 const { fetchReviews, fetchReviewsById } = require('../models/reviews.models');
 
 exports.getReviewsById = async (req, res, next) => {
+  const { review_id } = req.params;
   try {
-    const reviewByIdData = await fetchReviewsById();
+    const reviewByIdData = await fetchReviewsById(review_id);
     res.status(200).send({ review: reviewByIdData });
   } catch (error) {
     next(err);

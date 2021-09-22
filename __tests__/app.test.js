@@ -43,7 +43,7 @@ describe('/api', () => {
     describe('/:review_id', () => {
       describe('GET', () => {
         test('200:responds with a review object', async () => {
-          res = await request(app).get('/api/reviews/:review_id').expect(200);
+          res = await request(app).get('/api/reviews/1').expect(200);
           expect(res.body.review).toMatchObject({
             owner: expect.any(String),
             title: expect.any(String),
@@ -53,6 +53,8 @@ describe('/api', () => {
             review_img_url: expect.any(String),
             category: expect.any(String),
             created_at: expect.any(String),
+            votes: expect.any(String),
+            comment_count: expect.any(String)
           });
         });
       });
@@ -60,13 +62,3 @@ describe('/api', () => {
   });
 });
 
-// owner which is the username from the users table
-// title
-// review_id
-// review_body
-// designer
-// review_img_url
-// category
-// created_at
-// votes
-// comment_count which is the total count of all the comments with this review_id - you should make use of queries to the database in order to achieve this

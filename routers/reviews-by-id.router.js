@@ -1,7 +1,8 @@
-const express = require('express');
+// const express = require('express');
+// const { getReviewsById } = require('../controllers/reviews.controllers');
 
-const reviewsByIdRouter = express.Router();
+// const reviewsByIdRouter = express.Router();
 
-reviewsByIdRouter.route('/').get()
+// reviewsByIdRouter.route('/').get(getReviewsById)
 
-module.exports = reviewsByIdRouter;
+// module.exports = reviewsByIdRouter;

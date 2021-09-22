@@ -1,14 +1,35 @@
 const db = require('../db/connection');
 const reviews = require('../db/data/test-data/reviews');
 
-exports.fetchReviewsById = async () => {
-    // const result = await db.query()
+exports.fetchReviewsById = async (review_id) => {
+  const { rows: resultReview } = await db.query(
+    `
+  SELECT * FROM reviews
+  WHERE review_id = $1;
+  `,
+    [review_id]
+  );
+  const reviewByIdData =  resultReview[0]
+
+  const { rows: resultCommentCount } = await db.query(
+    `
+  SELECT COUNT (*) 
+  FROM comments
+  WHERE review_id = $1;
+  `,
+    [review_id]
+  );
+  const commentCount = resultCommentCount[0].count;
+
+  reviewByIdData.comment_count = commentCount;
+  // console.log(reviewByIdData,'<<< review bt id data')
+  return reviewByIdData;
 };
 
 exports.fetchReviews = async () => {
-  result = await db.query('SELECT * FROM reviews');
+  const result = await db.query('SELECT * FROM reviews;');
   const reviewsData = result.rows;
-  // console.log(reviewsData[0]);
+  // console.log(reviewsData);
 
   reviewsData.forEach(async (review) => {
     // const reviewId = review.review_id;
