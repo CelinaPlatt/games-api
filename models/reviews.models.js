@@ -9,11 +9,11 @@ exports.fetchReviewsById = async (review_id) => {
   `,
     [review_id]
   );
-  const reviewByIdData =  resultReview[0]
+  const reviewByIdData = resultReview[0];
 
   const { rows: resultCommentCount } = await db.query(
     `
-  SELECT COUNT (*) 
+  SELECT COUNT (*)
   FROM comments
   WHERE review_id = $1;
   `,
@@ -22,24 +22,22 @@ exports.fetchReviewsById = async (review_id) => {
   const commentCount = resultCommentCount[0].count;
 
   reviewByIdData.comment_count = commentCount;
-  // console.log(reviewByIdData,'<<< review bt id data')
+  // console.log(reviewByIdData,'<<< review by id data')
   return reviewByIdData;
 };
 
 exports.fetchReviews = async () => {
-  const result = await db.query('SELECT * FROM reviews;');
+  const result = await db.query(`
+  SELECT reviews.* ,
+  COUNT(comments.review_id)::INT AS comment_count
+  FROM reviews
+  LEFT JOIN comments
+  ON comments.review_id = reviews.review_id
+  GROUP BY reviews.review_id
+  ;
+  `);
   const reviewsData = result.rows;
-  // console.log(reviewsData);
+  console.log(reviewsData);
 
-  reviewsData.forEach(async (review) => {
-    // const reviewId = review.review_id;
-    // const reviewCommentsQueryResult = await db.query(`
-    // SELECT * FROM comments
-    // WHERE review_id = $1`,[reviewId]);
-    // const commentCount = reviewCommentsQueryResult.rows.length;
-    // console.log(commentCount);
-    review.comment_count = 7;
-  });
-  // console.log(reviewsData[5]);
   return reviewsData;
 };

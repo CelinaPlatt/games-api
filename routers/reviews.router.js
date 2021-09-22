@@ -9,6 +9,6 @@ const reviewsByIdRouter = require('./reviews-by-id.router');
 const reviewsRouter = express.Router();
 
 reviewsRouter.route('/').get(getReviews);
-reviewsRouter.use('/:review_id', getReviewsById);
+reviewsRouter.get('/:review_id', getReviewsById);
 
 module.exports = reviewsRouter;
