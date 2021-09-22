@@ -1,44 +1,42 @@
 // extract any functions you are using to manipulate your data, into this file
 
-exports.formatCategoryData = (categoryData) => {
-    const formattedCategories = categoryData.map((user)=>{
-        return [user.slug, user.description];
+const formatData = (data, properties) => {
+  const formattedData = data.map((object) => {
+    const formattedObject = properties.map((property) => {
+      return object[property];
     });
-    return formattedCategories;
+    return formattedObject;
+  });
+  return formattedData;
+};
+
+exports.formatCategoryData = (categoryData) => {
+  return formatData(categoryData, ['slug', 'description']);
 };
 
 exports.formatUserData = (userData) => {
-    const formattedUsers = userData.map((user)=>{
-        return [user.username, user.name, user.avatar_url];
-    })
-    return formattedUsers;
+  return formatData(userData, ['username', 'name', 'avatar_url']);
 };
 
 exports.formatReviewData = (reviewData) => {
-    const formattedReviews = reviewData.map((review)=>{
-        return [
-            review.title,
-            review.review_body,
-            review.designer,
-            review.review_img_url,
-            review.votes,
-            review.category,
-            review.owner,
-            review.created_at
-        ];
-    })
-    return formattedReviews;
+  return formatData(reviewData, [
+    'title',
+    'review_body',
+    'designer',
+    'review_img_url',
+    'votes',
+    'category',
+    'owner',
+    'created_at',
+  ]);
 };
 
 exports.formatCommentData = (commentData) => {
-    const formattedComments = commentData.map((comment)=>{
-        return [
-            comment.author,
-            comment.review_id,
-            comment.votes,
-            comment.created_at,
-            comment.body
-        ];
-    })
-    return formattedComments;
-}
+  return formatData(commentData, [
+    'author',
+    'review_id',
+    'votes',
+    'created_at',
+    'body',
+  ]);
+};
