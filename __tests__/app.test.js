@@ -39,6 +39,18 @@ describe('/api', () => {
           });
         });
       });
+      test.only('200:review objects are sorted by date in descending order by default', async() => {
+        const res = await request(app).get('/api/reviews').expect(200);
+        expect(res.body.reviews).toBeSortedBy('created_at',{descending: true, coerce: true});
+      });
+      test.only('200:review objects are sorted by any valid column specified', async() => {
+        const res = await request(app).get('/api/reviews?sort_by=title').expect(200);
+        expect(res.body.reviews).toBeSortedBy('title',{ coerce: true,});
+      });
+      test.only('400:responds with a "bad request" message when passed an invalid column to sort by', async() => {
+        const res = await request(app).get('/api/reviews?sort_by=date').expect(400);
+        expect(res.body.msg).toBe('Bad Request');
+      });
     });
     describe('/:review_id', () => {
       describe('GET', () => {
