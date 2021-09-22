@@ -4,7 +4,7 @@ const {
   getReviewsById,
 } = require('../controllers/reviews.controllers');
 const reviews = require('../db/data/test-data/reviews');
-const reviewsByIdRouter = require('./reviews-by-id.router');
+
 
 const reviewsRouter = express.Router();
 
