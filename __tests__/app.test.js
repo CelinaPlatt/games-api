@@ -7,8 +7,6 @@ const app = require('../app.js');
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
-
-
 describe('/api', () => {
   describe('/categories', () => {
     describe('GET', () => {
@@ -63,17 +61,17 @@ describe('/api', () => {
           res = await request(app).get('/api/reviews/a1').expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
-        test('404:responds with a "Not Found" message when passed an invalid review_id', async () => {
+        test('404:responds with a "Not Found" message when passed a valid review_id that does not exist yet', async () => {
           res = await request(app).get('/api/reviews/20').expect(404);
           expect(res.body.msg).toBe('Not Found');
         });
       });
       describe('PATCH', () => {
         test('201:responds with the updated review object, when passed an object specifying the number of votes to increment :{ inc_votes: newVoteNum } ', async () => {
-          res= await request(app)
-          .patch('/api/reviews/12')
-          .send({ inc_votes: 20 })
-          .expect(201)
+          res = await request(app)
+            .patch('/api/reviews/12')
+            .send({ inc_votes: 20 })
+            .expect(201);
           expect(res.body.review).toMatchObject({
             owner: expect.any(String),
             title: expect.any(String),
@@ -83,14 +81,14 @@ describe('/api', () => {
             review_img_url: expect.any(String),
             category: expect.any(String),
             created_at: expect.any(String),
-            votes: '120'
+            votes: '120',
           });
         });
         test('201:works for decrementing votes too', async () => {
-          res= await request(app)
-          .patch('/api/reviews/12')
-          .send({ inc_votes: -20 })
-          .expect(201)
+          res = await request(app)
+            .patch('/api/reviews/12')
+            .send({ inc_votes: -20 })
+            .expect(201);
           expect(res.body.review).toMatchObject({
             owner: expect.any(String),
             title: expect.any(String),
@@ -100,8 +98,19 @@ describe('/api', () => {
             review_img_url: expect.any(String),
             category: expect.any(String),
             created_at: expect.any(String),
-            votes: '80'
+            votes: '80',
           });
+        });
+        test('400:responds with a "bad request" message when passed an invalid review_id', async () => {
+          res = await request(app)
+            .patch('/api/reviews/a12')
+            .send({ inc_votes: -20 })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('404:responds with a "Not Found" message when passed when passed a valid review_id that does not exist yet', async () => {
+          res = await request(app).patch('/api/reviews/20').expect(404);
+          expect(res.body.msg).toBe('Not Found');
         });
       });
     });

@@ -23,7 +23,11 @@ exports.patchReviewById = async (req, res, next) => {
   const { inc_votes } = req.body;
   try {
     const patchedReviewData = await updateReviewById(review_id, inc_votes);
-    res.status(201).send({ review: patchedReviewData });
+    if (patchedReviewData) {
+      res.status(201).send({ review: patchedReviewData });
+    } else {
+      await Promise.reject({ status: 404, msg: 'Not Found' });
+    }
   } catch (err) {
     next(err);
   }
