@@ -1,3 +1,4 @@
+const { patchReviewById } = require('../controllers/reviews.controllers');
 const db = require('../db/connection');
 const reviews = require('../db/data/test-data/reviews');
 
@@ -16,6 +17,19 @@ exports.fetchReviewsById = async (review_id) => {
   );
   const reviewData = result.rows[0];
   return reviewData;
+};
+
+exports.updateReviewById = async (review_id, newVote) => {
+  const patchedReviewData = await db.query(
+    `
+    UPDATE reviews
+    SET votes = votes + $1
+    WHERE review_id = $2 
+    RETURNING *;
+    `,
+    [newVote, review_id]
+  );
+  return patchedReviewData.rows[0];
 };
 
 exports.fetchReviews = async () => {

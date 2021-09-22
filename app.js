@@ -3,6 +3,7 @@ const { handleCustomErrors } = require('./errors/errors.controllers');
 const apiRouter = require('./routers/api.router');
 
 const app = express();
+app.use(express.json());
 
 app.use('/api', apiRouter);
 
@@ -14,12 +15,10 @@ app.all('*', (req, res) => {
 //Handle rest of errors
 app.use(handleCustomErrors);
 
-
 //If error is not accounted for
-app.use((err,req,res,next)=>{
-    console.log(err,'<<< unhandled error');
-    res.status(500).send({msg:'Internal Server Error'})
-})
-
+app.use((err, req, res, next) => {
+  console.log(err, '<<< unhandled error');
+  res.status(500).send({ msg: 'Internal Server Error' });
+});
 
 module.exports = app;

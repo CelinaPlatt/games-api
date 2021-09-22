@@ -1,4 +1,8 @@
-const { fetchReviews, fetchReviewsById } = require('../models/reviews.models');
+const {
+  fetchReviews,
+  fetchReviewsById,
+  updateReviewById,
+} = require('../models/reviews.models');
 
 exports.getReviewsById = async (req, res, next) => {
   const { review_id } = req.params;
@@ -9,6 +13,17 @@ exports.getReviewsById = async (req, res, next) => {
     } else {
       await Promise.reject({ status: 404, msg: 'Not Found' });
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.patchReviewById = async (req, res, next) => {
+  const { review_id } = req.params;
+  const { inc_votes } = req.body;
+  try {
+    const patchedReviewData = await updateReviewById(review_id, inc_votes);
+    res.status(201).send({ review: patchedReviewData });
   } catch (err) {
     next(err);
   }
