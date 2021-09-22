@@ -1,19 +1,21 @@
 const db = require('../connection.js');
 
-const format = require("pg-format");
-const { formatCategoryData, formatUserData, formatReviewData, formatCommentData } = require('../utils/data-manipulation.js');
+const format = require('pg-format');
+const {
+  formatCategoryData,
+  formatUserData,
+  formatReviewData,
+  formatCommentData,
+} = require('../utils/data-manipulation.js');
 
-const seed = async(data) => {
+const seed = async (data) => {
   const { categoryData, commentData, reviewData, userData } = data;
   // Drop tables if exist
-  const dropTables = await db.query(`DROP TABLE IF EXISTS categories,users,reviews,comments;`);
-  // console.log(dropTables.command + ' all tables');
+  await db.query(`DROP TABLE IF EXISTS categories,users,reviews,comments;`);
 
-  // 1. create tables
+  //---------Create Categories Table ------------------
 
-  //---------Categories Table ------------------
-
-  const createCategoryTable = await db.query(
+  await db.query(
     `
     CREATE TABLE categories (
       slug VARCHAR(100) PRIMARY KEY,
@@ -21,11 +23,10 @@ const seed = async(data) => {
     );
     `
   );
-  // console.log(createCategoryTable.command + ' categories')
 
-  //---------Users Table ------------------
+  //---------Create Users Table ------------------
 
-  const createUsersTable = await db.query(
+  await db.query(
     `
     CREATE TABLE users (
       username VARCHAR(100) PRIMARY KEY,
@@ -34,11 +35,10 @@ const seed = async(data) => {
     );
     `
   );
-  // console.log(createUsersTable.command + ' users')
 
-  //---------Reviews Table ------------------
+  //---------Create Reviews Table ------------------
 
-  const createReviewsTable = await db.query(
+  await db.query(
     `
     CREATE TABLE reviews (
       review_id SERIAL PRIMARY KEY,
@@ -53,11 +53,10 @@ const seed = async(data) => {
     );
     `
   );
-  // console.log(createReviewsTable.command + ' reviews')
 
-  //---------Comments Table ------------------
+  //---------Create Comments Table --------------
 
-  const createCommentsTable = await db.query(
+  await db.query(
     `
     CREATE TABLE comments (
       comment_id SERIAL PRIMARY KEY,
@@ -69,30 +68,26 @@ const seed = async(data) => {
     );
     `
   );
-  // console.log(createCommentsTable.command + ' comments')
 
-  // 2. insert data
-
-  //---------Insert into Categories Table ------------------
+  //---------Insert into Categories Table --------------
 
   const formattedCategories = formatCategoryData(categoryData);
-  const queryStrCategories = format (
-  `
+  const queryStrCategories = format(
+    `
   INSERT INTO categories
   (slug,description)
   VALUES
   %L
   RETURNING *;
   `,
-  formattedCategories
+    formattedCategories
   );
-  const insertCategories = await db.query(queryStrCategories);
-  // console.log('INSERT INTO categories \n',insertCategories.rows[0]);
+  await db.query(queryStrCategories);
 
-  //---------Insert into Categories Table ------------------
+  //---------Insert into Categories Table --------------
 
   const formattedUsers = formatUserData(userData);
-  const queryStrUsers = format (
+  const queryStrUsers = format(
     `
     INSERT INTO users
     (username,name,avatar_url)
@@ -102,13 +97,12 @@ const seed = async(data) => {
     `,
     formattedUsers
   );
-  const insertUsers = await db.query(queryStrUsers);
-  // console.log('INSERT INTO users \n',insertUsers.rows[0]);
+  await db.query(queryStrUsers);
 
-  //---------Insert into Categories Table ------------------
+  //---------Insert into Categories Table --------------
 
   const formattedReviews = formatReviewData(reviewData);
-  const queryStrReviews = format (
+  const queryStrReviews = format(
     `
     INSERT INTO reviews
     (title, review_body, designer, review_img_url,votes, category, owner, created_at)
@@ -118,13 +112,12 @@ const seed = async(data) => {
     `,
     formattedReviews
   );
-  const insertReviews = await db.query(queryStrReviews);
-  // console.log('INSERT INTO reviews \n',insertReviews.rows[0]);
+  await db.query(queryStrReviews);
 
-  // ---------Insert into Categories Table ------------------
+  // ---------Insert into Categories Table -------------
 
   const formattedComments = formatCommentData(commentData);
-  const queryStrComments = format (
+  const queryStrComments = format(
     `
     INSERT INTO comments
     (author, review_id, votes, created_at, body)
@@ -134,9 +127,7 @@ const seed = async(data) => {
     `,
     formattedComments
   );
-  const insertComments = await db.query(queryStrComments);
-  // console.log('INSERT INTO comments \n',insertComments.rows[0]);
-
+  await db.query(queryStrComments);
 };
 
 module.exports = seed;
