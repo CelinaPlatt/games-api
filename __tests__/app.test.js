@@ -54,11 +54,18 @@ describe('/api', () => {
             category: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(String),
-            comment_count: expect.any(Number)
+            comment_count: expect.any(Number),
           });
+        });
+        test('400:responds with a "bad request" message when passed an invalid review_id', async () => {
+          res = await request(app).get('/api/reviews/a1').expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('404:responds with a "Not Found" message when passed an invalid review_id', async () => {
+          res = await request(app).get('/api/reviews/20').expect(404);
+          expect(res.body.msg).toBe('Not Found');
         });
       });
     });
   });
 });
-

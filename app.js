@@ -1,4 +1,5 @@
 const express = require('express');
+const { handleCustomErrors } = require('./errors/errors.controllers');
 const apiRouter = require('./routers/api.router');
 
 const app = express();
@@ -11,7 +12,7 @@ app.all('*', (req, res) => {
 });
 
 //Handle rest of errors
-
+app.use(handleCustomErrors);
 
 
 //If error is not accounted for

@@ -4,7 +4,11 @@ exports.getReviewsById = async (req, res, next) => {
   const { review_id } = req.params;
   try {
     const reviewByIdData = await fetchReviewsById(review_id);
-    res.status(200).send({ review: reviewByIdData });
+    if (reviewByIdData) {
+      res.status(200).send({ review: reviewByIdData });
+    } else {
+      await Promise.reject({ status: 404, msg: 'Not Found' });
+    }
   } catch (err) {
     next(err);
   }
