@@ -63,12 +63,21 @@ describe('/api', () => {
           .expect(200);
         expect(res.body.reviews).toBeSortedBy('created_at');
       });
-      test.only('200:review objects are sorted by column and order specified', async () => {
+      test('200:review objects are sorted by column and order specified', async () => {
         const res = await request(app)
           .get('/api/reviews?sort_by=review_id&order=desc')
           .expect(200);
         expect(res.body.reviews).toBeSortedBy('review_id', {
           descending: true,
+        });
+      });
+      test.only('200:review objects are sorted by category specified', async () => {
+        const res = await request(app)
+          .get('/api/reviews?category=dexterity')
+          .expect(200);
+        expect(res.body.reviews).toHaveLength(1);
+        res.body.reviews.forEach((review) => {
+          expect(review.category).toBe('dexterity');
         });
       });
     });

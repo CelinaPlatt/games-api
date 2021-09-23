@@ -33,10 +33,14 @@ exports.updateReviewById = async (review_id, newVote) => {
   return patchedReviewData.rows[0];
 };
 
-exports.fetchReviews = async (sort_by = 'created_at', order = 'desc') => {
-  console.log(sort_by,'<<<sort by'),
-  console.log(order,'<<<<order by')
-  const validOrderInput = ['asc','desc'];
+exports.fetchReviews = async (
+  sort_by = 'created_at',
+  order = 'desc',
+  category
+) => {
+  console.log(sort_by, '<<<sort by'), console.log(order, '<<<<order by');
+
+  const validOrderInputs = ['asc', 'desc'];
   const validSortByColumns = [
     'owner',
     'title',
@@ -49,22 +53,34 @@ exports.fetchReviews = async (sort_by = 'created_at', order = 'desc') => {
   if (!validSortByColumns.includes(sort_by)) {
     await Promise.reject({ status: 400, msg: 'Bad Request' });
   }
-  if (!validOrderInput.includes(order)) {
+  if (!validOrderInputs.includes(order)) {
     await Promise.reject({ status: 400, msg: 'Bad Request' });
   }
-  const result = await db.query(`
+
+  let queryStr = `
   SELECT reviews.* ,
   COUNT(comments.review_id)::INT AS comment_count
   FROM reviews
   LEFT JOIN comments
   ON comments.review_id = reviews.review_id
+  `;
+
+  const queryValues = [];
+
+  if (category) {
+    console.log(category);
+    queryStr += `WHERE reviews.category = $1`;
+    queryValues.push(category);
+  }
+
+  queryStr += `
   GROUP BY reviews.review_id
   ORDER BY ${sort_by} ${order}
-  ;
-  `);
+  `;
+
+  const result = await db.query(queryStr, queryValues);
   const reviewsData = result.rows;
-  // console.log(reviewsData[0].comment_count);
-  console.log(reviewsData,'<<<REVIEWS');
+  console.log(reviewsData, '<<<REVIEWS');
 
   return reviewsData;
 };
