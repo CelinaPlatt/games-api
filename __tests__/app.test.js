@@ -184,6 +184,10 @@ describe('/api', () => {
               .expect(400);
             expect(res.body.msg).toBe('Bad Request');
           });
+          test('404:responds with a "Not Found" message when passed when passed a valid review_id that does not exist yet', async () => {
+            res = await request(app).get('/api/reviews/300/comments').expect(404);
+            expect(res.body.msg).toBe('Not Found');
+          });
         });
       });
     });

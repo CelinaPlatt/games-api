@@ -41,7 +41,7 @@ exports.fetchReviews = async (
   const validOrderInputs = ['asc', 'desc'];
 
   if (!validOrderInputs.includes(order)) {
-    await Promise.reject({ status: 400, msg: 'Bad Request' });
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
   const validSortByColumns = [
@@ -55,7 +55,7 @@ exports.fetchReviews = async (
   ];
 
   if (!validSortByColumns.includes(sort_by)) {
-    await Promise.reject({ status: 400, msg: 'Bad Request' });
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
   let queryStr = `
@@ -93,5 +93,24 @@ exports.fetchCommentsByReviewId = async (review_id) => {
     `,
     [review_id]
   );
+
+  if (result.rows.length === 0) {
+    await checkReviewExists(review_id);
+  }
   return result.rows;
+};
+
+const checkReviewExists = async (review_id) => {
+  console.log('checking');
+  const result = await db.query(
+    `
+    SELECT * FROM reviews
+    WHERE review_id = $1
+    `,
+    [review_id]
+  );
+
+  if (result.rows.length === 0) {
+    return Promise.reject({ status: 404, msg: 'Not Found' });
+  }
 };
