@@ -39,17 +39,37 @@ describe('/api', () => {
           });
         });
       });
-      test.only('200:review objects are sorted by date in descending order by default', async() => {
+      test('200:review objects are sorted by date (created_at) in descending order by default', async () => {
         const res = await request(app).get('/api/reviews').expect(200);
-        expect(res.body.reviews).toBeSortedBy('created_at',{descending: true, coerce: true});
+        expect(res.body.reviews).toBeSortedBy('created_at', {
+          descending: true,
+        });
       });
-      test.only('200:review objects are sorted by any valid column specified', async() => {
-        const res = await request(app).get('/api/reviews?sort_by=title').expect(200);
-        expect(res.body.reviews).toBeSortedBy('title',{ coerce: true,});
+      test('200:review objects are sorted by any valid column specified', async () => {
+        const res = await request(app)
+          .get('/api/reviews?sort_by=title')
+          .expect(200);
+        expect(res.body.reviews).toBeSortedBy('title', { coerce: true });
       });
-      test.only('400:responds with a "bad request" message when passed an invalid column to sort by', async() => {
-        const res = await request(app).get('/api/reviews?sort_by=date').expect(400);
+      test('400:responds with a "bad request" message when passed an invalid column to sort by', async () => {
+        const res = await request(app)
+          .get('/api/reviews?sort_by=date')
+          .expect(400);
         expect(res.body.msg).toBe('Bad Request');
+      });
+      test('200:review objects are sorted by ascending order when specified', async () => {
+        const res = await request(app)
+          .get('/api/reviews?order=asc')
+          .expect(200);
+        expect(res.body.reviews).toBeSortedBy('created_at');
+      });
+      test.only('200:review objects are sorted by column and order specified', async () => {
+        const res = await request(app)
+          .get('/api/reviews?sort_by=review_id&order=desc')
+          .expect(200);
+        expect(res.body.reviews).toBeSortedBy('review_id', {
+          descending: true,
+        });
       });
     });
     describe('/:review_id', () => {
