@@ -59,12 +59,12 @@ exports.fetchReviews = async (
   }
 
   let queryStr = `
-  SELECT reviews.* ,
-  COUNT(comments.review_id)::INT AS comment_count
-  FROM reviews
-  LEFT JOIN comments
-  ON comments.review_id = reviews.review_id
-  `;
+    SELECT reviews.* ,
+    COUNT(comments.review_id)::INT AS comment_count
+    FROM reviews
+    LEFT JOIN comments
+    ON comments.review_id = reviews.review_id
+    `;
 
   const queryValues = [];
 
@@ -83,4 +83,15 @@ exports.fetchReviews = async (
   const reviewsData = result.rows;
 
   return reviewsData;
+};
+
+exports.fetchCommentsByReviewId = async (review_id) => {
+  const result = await db.query(
+    `
+    SELECT * FROM comments
+    WHERE comments.review_id = $1;   
+    `,
+    [review_id]
+  );
+  return result.rows;
 };

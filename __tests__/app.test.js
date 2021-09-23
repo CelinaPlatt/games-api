@@ -160,6 +160,32 @@ describe('/api', () => {
           expect(res.body.msg).toBe('Not Found');
         });
       });
+      describe('/comments', () => {
+        describe('GET', () => {
+          test('200: responds with an array of comments objects on review specified', async () => {
+            const res = await request(app)
+              .get('/api/reviews/2/comments')
+              .expect(200);
+            expect(res.body.comments).toHaveLength(3);
+            res.body.comments.forEach((comment) => {
+              expect(comment).toMatchObject({
+                comment_id: expect.any(Number),
+                body: expect.any(String),
+                votes: expect.any(String),
+                author: expect.any(String),
+                review_id: expect.any(Number),
+                created_at: expect.any(String),
+              });
+            });
+          });
+          test('400:responds with a "bad request" message when passed an invalid review_id', async () => {
+            res = await request(app)
+              .get('/api/reviews/a12/comments')
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+        });
+      });
     });
   });
 });
