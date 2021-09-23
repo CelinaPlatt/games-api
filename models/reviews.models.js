@@ -2,6 +2,7 @@ const { patchReviewById } = require('../controllers/reviews.controllers');
 const db = require('../db/connection');
 const { sort } = require('../db/data/test-data/reviews');
 const reviews = require('../db/data/test-data/reviews');
+const { formatCommentData } = require('../db/utils/data-manipulation');
 
 exports.fetchReviewsById = async (review_id) => {
   const result = await db.query(
@@ -69,7 +70,6 @@ exports.fetchReviews = async (
   const queryValues = [];
 
   if (category) {
-    console.log(category);
     queryStr += `WHERE reviews.category = $1`;
     queryValues.push(category);
   }
@@ -101,7 +101,6 @@ exports.fetchCommentsByReviewId = async (review_id) => {
 };
 
 const checkReviewExists = async (review_id) => {
-  console.log('checking');
   const result = await db.query(
     `
     SELECT * FROM reviews
@@ -113,4 +112,18 @@ const checkReviewExists = async (review_id) => {
   if (result.rows.length === 0) {
     return Promise.reject({ status: 404, msg: 'Not Found' });
   }
+};
+
+exports.insertCommentByReviewId = async (review_id, username, body) => {
+  const result = await db.query(
+    `
+  INSERT INTO comments
+  (author,review_id,body)
+  VALUES
+  ($1,$2,$3)
+  RETURNING *
+  `,
+    [username, review_id, body]
+  );
+  return result.rows[0];
 };
