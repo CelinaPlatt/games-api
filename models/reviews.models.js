@@ -38,9 +38,12 @@ exports.fetchReviews = async (
   order = 'desc',
   category
 ) => {
-  console.log(sort_by, '<<<sort by'), console.log(order, '<<<<order by');
-
   const validOrderInputs = ['asc', 'desc'];
+
+  if (!validOrderInputs.includes(order)) {
+    await Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
+
   const validSortByColumns = [
     'owner',
     'title',
@@ -50,10 +53,8 @@ exports.fetchReviews = async (
     'created_at',
     'comment_count',
   ];
+
   if (!validSortByColumns.includes(sort_by)) {
-    await Promise.reject({ status: 400, msg: 'Bad Request' });
-  }
-  if (!validOrderInputs.includes(order)) {
     await Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
@@ -80,7 +81,6 @@ exports.fetchReviews = async (
 
   const result = await db.query(queryStr, queryValues);
   const reviewsData = result.rows;
-  console.log(reviewsData, '<<<REVIEWS');
 
   return reviewsData;
 };

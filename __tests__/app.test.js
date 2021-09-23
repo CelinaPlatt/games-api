@@ -45,39 +45,45 @@ describe('/api', () => {
           descending: true,
         });
       });
-      test('200:review objects are sorted by any valid column specified', async () => {
-        const res = await request(app)
-          .get('/api/reviews?sort_by=title')
-          .expect(200);
-        expect(res.body.reviews).toBeSortedBy('title', { coerce: true });
-      });
-      test('400:responds with a "bad request" message when passed an invalid column to sort by', async () => {
-        const res = await request(app)
-          .get('/api/reviews?sort_by=date')
-          .expect(400);
-        expect(res.body.msg).toBe('Bad Request');
-      });
-      test('200:review objects are sorted by ascending order when specified', async () => {
-        const res = await request(app)
-          .get('/api/reviews?order=asc')
-          .expect(200);
-        expect(res.body.reviews).toBeSortedBy('created_at');
-      });
-      test('200:review objects are sorted by column and order specified', async () => {
-        const res = await request(app)
-          .get('/api/reviews?sort_by=review_id&order=desc')
-          .expect(200);
-        expect(res.body.reviews).toBeSortedBy('review_id', {
-          descending: true,
+      describe('?sort_by=column-name', () => {
+        test('200:review objects are sorted by any valid column specified', async () => {
+          const res = await request(app)
+            .get('/api/reviews?sort_by=title')
+            .expect(200);
+          expect(res.body.reviews).toBeSortedBy('title', { coerce: true });
+        });
+        test('400:responds with a "bad request" message when passed an invalid column to sort by', async () => {
+          const res = await request(app)
+            .get('/api/reviews?sort_by=date')
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
         });
       });
-      test.only('200:review objects are sorted by category specified', async () => {
-        const res = await request(app)
-          .get('/api/reviews?category=dexterity')
-          .expect(200);
-        expect(res.body.reviews).toHaveLength(1);
-        res.body.reviews.forEach((review) => {
-          expect(review.category).toBe('dexterity');
+      describe('?order=asc/desc', () => {
+        test('200:review objects are sorted by ascending order when specified', async () => {
+          const res = await request(app)
+            .get('/api/reviews?order=asc')
+            .expect(200);
+          expect(res.body.reviews).toBeSortedBy('created_at');
+        });
+        test('200:review objects are sorted by column and order specified', async () => {
+          const res = await request(app)
+            .get('/api/reviews?sort_by=review_id&order=desc')
+            .expect(200);
+          expect(res.body.reviews).toBeSortedBy('review_id', {
+            descending: true,
+          });
+        });
+      });
+      describe('?category=category-name', () => {
+        test('200:review objects are sorted by category specified', async () => {
+          const res = await request(app)
+            .get('/api/reviews?category=social%20deduction')
+            .expect(200);
+          expect(res.body.reviews).toHaveLength(11);
+          res.body.reviews.forEach((review) => {
+            expect(review.category).toBe('social deduction');
+          });
         });
       });
     });
