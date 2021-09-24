@@ -10,12 +10,16 @@ afterAll(() => db.end());
 describe('/api', () => {
   describe('/', () => {
     describe('GET', () => {
-      test.only('200:returns a JSON object describing all the available endpoints on the API', async () => {
+      test('200:returns a JSON object describing all the available endpoints on the API', async () => {
         res = await request(app).get('/api').expect(200);
         expect(Object.keys(res.body.endpoints)).toEqual([
           'GET /api',
           'GET /api/categories',
           'GET /api/reviews',
+          "GET /api/reviews/:review_id",
+          'PATCH /api/reviews/:review_id',
+          'GET /api/reviews/:review_id/comments',
+          'POST /api/reviews/:review_id/comments',
         ]);
       });
     });
