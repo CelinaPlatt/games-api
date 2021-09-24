@@ -49,7 +49,7 @@ const seed = async (data) => {
       votes NUMERIC DEFAULT 0,
       category VARCHAR(100) REFERENCES categories(slug),
       owner VARCHAR(100) REFERENCES users(username),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
     `
   );
@@ -84,7 +84,7 @@ const seed = async (data) => {
   );
   await db.query(queryStrCategories);
 
-  //---------Insert into Categories Table --------------
+  //---------Insert into Users Table --------------
 
   const formattedUsers = formatUserData(userData);
   const queryStrUsers = format(
@@ -99,7 +99,7 @@ const seed = async (data) => {
   );
   await db.query(queryStrUsers);
 
-  //---------Insert into Categories Table --------------
+  //---------Insert into Reviews Table --------------
 
   const formattedReviews = formatReviewData(reviewData);
   const queryStrReviews = format(
@@ -114,7 +114,7 @@ const seed = async (data) => {
   );
   await db.query(queryStrReviews);
 
-  // ---------Insert into Categories Table -------------
+  // ---------Insert into Comments Table -------------
 
   const formattedComments = formatCommentData(commentData);
   const queryStrComments = format(
