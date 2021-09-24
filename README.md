@@ -1,4 +1,8 @@
 # Game Critic API
+game-critic.herokuapp.com/api/
+
+---
+
 
 ## Project Summary
 
@@ -8,8 +12,6 @@ The database is **_PSQL_** and is interacted with using **_node-postgres_**
 
 &ensp; 
 ## Try the [hosted version](https://game-critic.herokuapp.com/api/)
-game-critic.herokuapp.com/api/
-
 
 &ensp; 
 ## How to run it locally
@@ -65,10 +67,10 @@ The next command will run all the tests with `jest`.
 $ npm test 
 ```
 &ensp; 
-### Minimun version of `Node.js`
+#### Minimun version of `Node.js`
 
 v16.5.0
 
-### Minimum version of `Postgres`
+#### Minimum version of `Postgres`
 
 psql (PostgreSQL) 12.8
