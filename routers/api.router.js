@@ -11,7 +11,4 @@ apiRouter.get('/categories', getCategories);
 
 apiRouter.use('/reviews', reviewsRouter);
 
-// apiRouter.use('/',childRouter);
-// apiRouter.use('/',controller);
-
 module.exports = apiRouter;
