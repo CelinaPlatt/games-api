@@ -8,6 +8,18 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('/api', () => {
+  describe('/', () => {
+    describe('GET', () => {
+      test.only('200:returns a JSON object describing all the available endpoints on the API', async () => {
+        res = await request(app).get('/api').expect(200);
+        expect(Object.keys(res.body.endpoints)).toEqual([
+          'GET /api',
+          'GET /api/categories',
+          'GET /api/reviews',
+        ]);
+      });
+    });
+  });
   describe('/categories', () => {
     describe('GET', () => {
       test('200:responds with an array of category objects', async () => {

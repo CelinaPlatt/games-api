@@ -4,6 +4,8 @@ const { sort } = require('../db/data/test-data/reviews');
 const reviews = require('../db/data/test-data/reviews');
 const { formatCommentData } = require('../db/utils/data-manipulation');
 
+exports.fetchEndpointsJson = async () => {};
+
 exports.fetchReviewsById = async (review_id) => {
   const result = await db.query(
     `
