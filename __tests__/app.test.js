@@ -171,9 +171,33 @@ describe('/api', () => {
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
-        test('404:responds with a "Not Found" message when passed when passed a valid review_id that does not exist yet', async () => {
-          res = await request(app).patch('/api/reviews/20').expect(404);
+        test('404:responds with a "Not Found" message when passed a valid review_id that does not exist yet', async () => {
+          res = await request(app)
+          .patch('/api/reviews/20')
+          .send({ inc_votes: -10 })
+          .expect(404);
           expect(res.body.msg).toBe('Not Found');
+        });
+        test('400:responds with a "Bad Request" message when passed an empty body', async () => {
+          res = await request(app)
+            .patch('/api/reviews/12')
+            .send({ })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when an invalid property name in the body', async () => {
+          res = await request(app)
+            .patch('/api/reviews/12')
+            .send({ votes: 10 })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when passed an invalid value type in the body', async () => {
+          res = await request(app)
+            .patch('/api/reviews/12')
+            .send({ inc_votes: 'A' })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
         });
       });
       describe('/comments', () => {

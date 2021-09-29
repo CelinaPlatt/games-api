@@ -24,16 +24,20 @@ exports.fetchReviewsById = async (review_id) => {
 };
 
 exports.updateReviewById = async (review_id, newVote) => {
-  const patchedReviewData = await db.query(
-    `
+  if (newVote) {
+    const patchedReviewData = await db.query(
+      `
     UPDATE reviews
     SET votes = votes + $1
     WHERE review_id = $2 
     RETURNING *;
     `,
-    [newVote, review_id]
-  );
-  return patchedReviewData.rows[0];
+      [newVote, review_id]
+    );
+    return patchedReviewData.rows[0];
+  } else {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
 };
 
 exports.fetchReviews = async (
