@@ -200,7 +200,7 @@ describe('/api', () => {
         test('400:responds with a "Bad Request" message when passed an empty body', async () => {
           res = await request(app)
             .patch('/api/reviews/12')
-            .send({})
+            .send()
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
@@ -376,13 +376,27 @@ describe('/api', () => {
             .expect(404);
           expect(res.body.msg).toBe('Not Found');
         });
-        // test('400:responds with a "Bad Request" message when passed an empty request body', async () => {
-        //   const res = await request(app)
-        //     .patch('/api/comments/2')
-        //     .send()
-        //     .expect(400);
-        //   expect(res.body.msg).toBe('Bad Request');
-        // });
+        test('400:responds with a "Bad Request" message when passed an incorrect body: empty request body', async () => {
+          const res = await request(app)
+            .patch('/api/comments/2')
+            .send()
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when passed an incorrect property: property is not a number', async () => {
+          const res = await request(app)
+            .patch('/api/comments/2')
+            .send({ inc_votes: 'a' })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when passed an incorrect property: property is missing', async () => {
+          const res = await request(app)
+            .patch('/api/comments/2')
+            .send({ bananas: 2 })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
       });
     });
   });

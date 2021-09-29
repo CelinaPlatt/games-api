@@ -28,14 +28,18 @@ const checkCommentExists = async (comment_id) => {
 
 exports.updateCommentById = async (comment_id, newVote) => {
   await checkCommentExists(comment_id);
-  const result = await db.query(
-    `
+  if (newVote) {
+    const result = await db.query(
+      `
         UPDATE comments
         SET votes = votes + $1
         WHERE comment_id = $2 
         RETURNING *;
     `,
-    [newVote, comment_id]
-  );
-  return result.rows[0];
+      [newVote, comment_id]
+    );
+    return result.rows[0];
+  } else {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
 };
