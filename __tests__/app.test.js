@@ -273,6 +273,26 @@ describe('/api', () => {
               body: "This is my sister's cat's absolute favourite!",
             });
           });
+          test('201:ignores unnecessary properties', async () => {
+            res = await request(app)
+              .post('/api/reviews/2/comments')
+              .send({
+                comment_id:9009,
+                country: 'UK',
+                username: 'mallionaire',
+                body: "This is my sister's cat's absolute favourite!",
+              })
+              .expect(201);
+            expect(res.body.comment).toMatchObject({
+              comment_id: expect.any(Number),
+              author: 'mallionaire',
+              review_id: 2,
+              votes: '0',
+              created_at: expect.any(String),
+              body: "This is my sister's cat's absolute favourite!",
+            });
+          });
+
           test('400:responds with a "Bad Request" message when passed an invalid review_id ', async () => {
             res = await request(app)
               .post('/api/reviews/a/comments')
