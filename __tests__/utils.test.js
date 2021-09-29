@@ -1,10 +1,9 @@
 const {
   formatCategoryData,
   formatUserData,
-  formatReviews,
   formatReviewData,
   formatCommentData,
-  // formatTimeStamp,
+  formatTimeStamp,
 } = require('../db/utils/data-manipulation');
 
 describe('formatCategoryData', () => {
@@ -281,48 +280,43 @@ describe('formatCommentData', () => {
     expect(input).toEqual(copyInput);
   });
 });
-// describe('formatTimeStamp', () => {
-//   test('returns a review object when passed a review object', () => {
-//     const input = {
-//       title: 'Jenga',
-//       created_at: new Date(1610964101251),
-//       votes: 5
-//     };
-//     const expectedOutput = {
-//       title: 'Jenga',
-//       created_at: '2021-01-18 10:01:41.251',
-//       votes: 5
-//     };
-//     const actualOutput = formatTimeStamp(input);
-//     expect(actualOutput).toEqual(expectedOutput);
-//   });
-//   test('returns a different object', () => {
-//     const input = {
-//       title: 'Jenga',
-//       created_at: new Date(1610964101251),
-//       votes: 5
-//     };
-//     const actualOutput = formatTimeStamp(input);
-//     expect(actualOutput).not.toBe(input);
-//   });
-//   test('returns a timestamp with the letters "T" AND "Z" removed as value for the created_at property, when passed an object with a created_at property', () => {
-//     const input = {
-//       created_at: new Date(1610964101251),
-//     };
-//     const expectedOutput = {
-//       created_at: '2021-01-18 10:01:41.251',
-//     };
-//     const actualOutput = formatTimeStamp(input);
-//     expect(actualOutput).toEqual(expectedOutput);
-//   });
-//   test('does not mutate original object', () => {
-//     const input = {
-//       created_at: new Date(1610964101251),
-//     };
-//     const copyInput = {
-//       created_at: new Date(1610964101251),
-//     };
-//     formatTimeStamp(input);
-//     expect(input).toEqual(copyInput);
-//   });
-// });
+describe('formatTimeStamp', () => {
+  test('returns a review object when passed a review object', () => {
+    const input = {
+      title: 'Jenga',
+      created_at: new Date(1610964101251),
+      votes: 5
+    };
+    const actualOutput = formatTimeStamp(input);
+    expect(typeof actualOutput).toBe('object');
+  });
+  test('returns a different object', () => {
+    const input = {
+      title: 'Jenga',
+      created_at: new Date(1610964101251),
+      votes: 5
+    };
+    const actualOutput = formatTimeStamp(input);
+    expect(actualOutput).not.toBe(input);
+  });
+  test('returns a timestamp with the letters "T" AND "Z" removed as value for the created_at property, when passed an object with a created_at property', () => {
+    const input = {
+      created_at: new Date(1610964101251),
+    };
+    const expectedOutput = {
+      created_at: '2021-01-18 10:01:41.251',
+    };
+    const actualOutput = formatTimeStamp(input);
+    expect(actualOutput).toEqual(expectedOutput);
+  });
+  test('does not mutate original object', () => {
+    const input = {
+      created_at: new Date(1610964101251),
+    };
+    const copyInput = {
+      created_at: new Date(1610964101251),
+    };
+    formatTimeStamp(input);
+    expect(input).toEqual(copyInput);
+  });
+});

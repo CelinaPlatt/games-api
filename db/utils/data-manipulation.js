@@ -10,16 +10,15 @@ const formatData = (data, properties) => {
   return formattedData;
 };
 
-exports.formatCategoryData = (categoryData) => {
+const formatCategoryData = (categoryData) => {
   return formatData(categoryData, ['slug', 'description']);
 };
 
-exports.formatUserData = (userData) => {
+const formatUserData = (userData) => {
   return formatData(userData, ['username', 'name', 'avatar_url']);
 };
 
-exports.formatReviewData = (reviewData) => {
-
+const formatReviewData = (reviewData) => {
   return formatData(reviewData, [
     'title',
     'review_body',
@@ -32,23 +31,15 @@ exports.formatReviewData = (reviewData) => {
   ]);
 };
 
-// format time stamp inside for each review property inside format Data
-// exports.formatTimeStamp = (timeStamp) => {
-
-//   const timeStampStr = timeStamp.toISOString();
-//   const formattedTimeStamp = timeStampStr.replaceAll(/[TZ]/g,' ').trim();
-//   return formattedTimeStamp;
-// };
-
-exports.formatTimeStamp = (object) => {
-  const copyObject = {...object};
+const formatTimeStamp = (object) => {
+  const copyObject ={...object};
   const timeStampStr = copyObject.created_at.toISOString();
   const formattedTimeStamp = timeStampStr.replaceAll(/[TZ]/g,' ').trim();
   copyObject.created_at = formattedTimeStamp;
   return copyObject;
 };
 
-exports.formatCommentData = (commentData) => {
+const formatCommentData = (commentData) => {
   return formatData(commentData, [
     'author',
     'review_id',
@@ -56,4 +47,13 @@ exports.formatCommentData = (commentData) => {
     'created_at',
     'body',
   ]);
+};
+
+module.exports = {
+  formatData,
+  formatCategoryData,
+  formatUserData,
+  formatReviewData,
+  formatTimeStamp,
+  formatCommentData,
 };
