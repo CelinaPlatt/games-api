@@ -33,5 +33,10 @@ module.exports = [
     slug: 'engine-building',
     description:
       'Games where players construct unique points-gaining engines main element of the gameplay'
+  },
+  {
+    slug: 'cats',
+    description:
+      'Games about cats'
   }
 ];

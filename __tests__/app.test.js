@@ -248,6 +248,12 @@ describe('/api', () => {
               .expect(404);
             expect(res.body.msg).toBe('Not Found');
           });
+          test.only('200:responds with an empty array of comments when passed a valid review_id but has no comments', async () => {
+            res = await request(app)
+              .get('/api/reviews/11/comments')
+              .expect(200);
+            expect(res.body.comments).toHaveLength(0);
+          });
         });
         describe('POST', () => {
           test('201:responds with the new posted comment object, when passed a user name and a review body ', async () => {
