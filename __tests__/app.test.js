@@ -283,21 +283,21 @@ describe('/api', () => {
               .expect(400);
             expect(res.body.msg).toBe('Bad Request');
           });
+          test('404:responds with a "Not Found" message when passed a valid but non-existent review_id ', async () => {
+            res = await request(app)
+              .post('/api/reviews/50/comments')
+              .send({
+                username: 'mallionaire',
+                body: "This is my sister's cat's absolute favourite!",
+              })
+              .expect(404);
+            expect(res.body.msg).toBe('Not Found');
+          });
           test('400:responds with a "Bad Request" message when passed an invalid username', async () => {
             res = await request(app)
               .post('/api/reviews/2/comments')
               .send({
                 username: 'lola',
-                body: 223,
-              })
-              .expect(400);
-            expect(res.body.msg).toBe('Bad Request');
-          });
-          test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
-            res = await request(app)
-              .post('/api/reviews/200/comments')
-              .send({
-                username: 'mallionaire',
                 body: 223,
               })
               .expect(400);

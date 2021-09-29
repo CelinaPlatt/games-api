@@ -56,6 +56,7 @@ exports.fetchReviews = async (
     'created_at',
     'comment_count',
   ];
+
   const fetchedCategories = await fetchCategories();
   const validCategories = fetchedCategories.map((category) => {
     return category.slug;
@@ -125,6 +126,8 @@ const checkReviewExists = async (review_id) => {
 };
 
 exports.insertCommentByReviewId = async (review_id, username, body) => {
+  await checkReviewExists(review_id);
+
   const result = await db.query(
     `
   INSERT INTO comments
@@ -135,5 +138,6 @@ exports.insertCommentByReviewId = async (review_id, username, body) => {
   `,
     [username, review_id, body]
   );
+
   return result.rows[0];
 };
