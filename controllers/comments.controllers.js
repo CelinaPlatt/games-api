@@ -2,7 +2,6 @@ const {
   deleteFromByCommentId,
   updateCommentById,
 } = require('../models/comments.models');
-const { patchReviewById } = require('./reviews.controllers');
 
 exports.deleteCommentById = async (req, res, next) => {
   const { comment_id } = req.params;
