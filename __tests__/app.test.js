@@ -362,6 +362,12 @@ describe('/api', () => {
             created_at: expect.any(String)  
           });
         });
+        test('400:responds with a "Bad Request" message when passed an invalid comment_id', async () => {
+          const res = await request(app)
+            .delete('/api/comments/ab')
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
       });
     });
   });
