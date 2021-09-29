@@ -47,11 +47,6 @@ exports.fetchReviews = async (
   category
 ) => {
   const validOrderInputs = ['asc', 'desc'];
-
-  if (!validOrderInputs.includes(order)) {
-    return Promise.reject({ status: 400, msg: 'Bad Request' });
-  }
-
   const validSortByColumns = [
     'owner',
     'title',
@@ -61,17 +56,16 @@ exports.fetchReviews = async (
     'created_at',
     'comment_count',
   ];
-
-  if (!validSortByColumns.includes(sort_by)) {
-    return Promise.reject({ status: 400, msg: 'Bad Request' });
-  }
-
   const fetchedCategories = await fetchCategories();
   const validCategories = fetchedCategories.map((category) => {
     return category.slug;
   });
 
-  if (category && !validCategories.includes(category)) {
+  if (
+    !validOrderInputs.includes(order) ||
+    !validSortByColumns.includes(sort_by) ||
+    (category && !validCategories.includes(category))
+  ) {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
