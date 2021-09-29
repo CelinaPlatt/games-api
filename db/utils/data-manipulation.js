@@ -19,7 +19,10 @@ const formatUserData = (userData) => {
 };
 
 const formatReviewData = (reviewData) => {
-  return formatData(reviewData, [
+  const formattedTimeStampData = reviewData.map((review) => {
+    return formatTimeStamp(review);
+  });
+  const formattedData = formatData(formattedTimeStampData, [
     'title',
     'review_body',
     'designer',
@@ -29,12 +32,13 @@ const formatReviewData = (reviewData) => {
     'owner',
     'created_at',
   ]);
+  return formattedData;
 };
 
 const formatTimeStamp = (object) => {
-  const copyObject ={...object};
+  const copyObject = { ...object };
   const timeStampStr = copyObject.created_at.toISOString();
-  const formattedTimeStamp = timeStampStr.replaceAll(/[TZ]/g,' ').trim();
+  const formattedTimeStamp = timeStampStr.replaceAll(/[TZ]/g, ' ').trim();
   copyObject.created_at = formattedTimeStamp;
   return copyObject;
 };

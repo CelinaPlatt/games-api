@@ -153,7 +153,7 @@ describe('formatReviewData', () => {
         5,
         'dexterity',
         'philippaclaire9',
-        new Date(1610964101251),
+        '2021-01-18 10:01:41.251'
       ],
     ];
     const actualOutput = formatReviewData(input);
