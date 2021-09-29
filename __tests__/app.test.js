@@ -368,6 +368,12 @@ describe('/api', () => {
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
+        test('404:responds with a "Not Found" message when passed a valid comment_id that does not exist yet', async () => {
+          const res = await request(app)
+            .delete('/api/comments/200')
+            .expect(404);
+          expect(res.body.msg).toBe('Not Found');
+        });
       });
     });
   });
