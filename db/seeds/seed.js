@@ -10,10 +10,8 @@ const {
 
 const seed = async (data) => {
   const { categoryData, commentData, reviewData, userData } = data;
-  // Drop tables if exist
-  await db.query(`DROP TABLE IF EXISTS categories,users,reviews,comments;`);
 
-  //---------Create Categories Table ------------------
+  await db.query(`DROP TABLE IF EXISTS categories,users,reviews,comments;`);
 
   await db.query(
     `
@@ -24,8 +22,6 @@ const seed = async (data) => {
     `
   );
 
-  //---------Create Users Table ------------------
-
   await db.query(
     `
     CREATE TABLE users (
@@ -35,8 +31,6 @@ const seed = async (data) => {
     );
     `
   );
-
-  //---------Create Reviews Table ------------------
 
   await db.query(
     `
@@ -54,8 +48,6 @@ const seed = async (data) => {
     `
   );
 
-  //---------Create Comments Table --------------
-
   await db.query(
     `
     CREATE TABLE comments (
@@ -68,8 +60,6 @@ const seed = async (data) => {
     );
     `
   );
-
-  //---------Insert into Categories Table --------------
 
   const formattedCategories = formatCategoryData(categoryData);
   const queryStrCategories = format(
@@ -84,8 +74,6 @@ const seed = async (data) => {
   );
   await db.query(queryStrCategories);
 
-  //---------Insert into Users Table --------------
-
   const formattedUsers = formatUserData(userData);
   const queryStrUsers = format(
     `
@@ -99,8 +87,6 @@ const seed = async (data) => {
   );
   await db.query(queryStrUsers);
 
-  //---------Insert into Reviews Table --------------
-
   const formattedReviews = formatReviewData(reviewData);
   const queryStrReviews = format(
     `
@@ -113,8 +99,6 @@ const seed = async (data) => {
     formattedReviews
   );
   await db.query(queryStrReviews);
-
-  // ---------Insert into Comments Table -------------
 
   const formattedComments = formatCommentData(commentData);
   const queryStrComments = format(
