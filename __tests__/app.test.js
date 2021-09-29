@@ -68,7 +68,7 @@ describe('/api', () => {
             .expect(200);
           expect(res.body.reviews).toBeSortedBy('title', { coerce: true });
         });
-        test('400:responds with a "bad request" message when passed an invalid column to sort by', async () => {
+        test('400:responds with a "Bad Request" message when passed an invalid column to sort by', async () => {
           const res = await request(app)
             .get('/api/reviews?sort_by=date')
             .expect(400);
@@ -90,7 +90,7 @@ describe('/api', () => {
             descending: true,
           });
         });
-        test('400:responds with a "bad request" message when passed an invalid order value', async () => {
+        test('400:responds with a "Bad Request" message when passed an invalid order value', async () => {
           const res = await request(app)
             .get('/api/reviews?order=bananas')
             .expect(400);
@@ -113,7 +113,7 @@ describe('/api', () => {
             .expect(200);
           expect(res.body.reviews).toHaveLength(0);
         });
-        test('400:responds with a "bad request" message when passed a non-existent category', async () => {
+        test('400:responds with a "Bad Request" message when passed a non-existent category', async () => {
           const res = await request(app)
             .get('/api/reviews?category=bananas')
             .expect(400);
@@ -138,7 +138,7 @@ describe('/api', () => {
             comment_count: expect.any(Number),
           });
         });
-        test('400:responds with a "bad request" message when passed an invalid review_id', async () => {
+        test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
           res = await request(app).get('/api/reviews/a1').expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
@@ -182,7 +182,7 @@ describe('/api', () => {
             votes: '80',
           });
         });
-        test('400:responds with a "bad request" message when passed an invalid review_id', async () => {
+        test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
           res = await request(app)
             .patch('/api/reviews/a12')
             .send({ inc_votes: -20 })
@@ -236,7 +236,7 @@ describe('/api', () => {
               });
             });
           });
-          test('400:responds with a "bad request" message when passed an invalid review_id', async () => {
+          test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
             res = await request(app)
               .get('/api/reviews/a12/comments')
               .expect(400);
@@ -248,7 +248,7 @@ describe('/api', () => {
               .expect(404);
             expect(res.body.msg).toBe('Not Found');
           });
-          test.only('200:responds with an empty array of comments when passed a valid review_id but has no comments', async () => {
+          test('200:responds with an empty array of comments when passed a valid review_id but has no comments', async () => {
             res = await request(app)
               .get('/api/reviews/11/comments')
               .expect(200);
@@ -273,7 +273,17 @@ describe('/api', () => {
               body: "This is my sister's cat's absolute favourite!",
             });
           });
-          test('400:responds with a "bad request" message when passed an invalid username', async () => {
+          test('400:responds with a "Bad Request" message when passed an invalid review_id ', async () => {
+            res = await request(app)
+              .post('/api/reviews/a/comments')
+              .send({
+                username: 'mallionaire',
+                body: "This is my sister's cat's absolute favourite!",
+              })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when passed an invalid username', async () => {
             res = await request(app)
               .post('/api/reviews/2/comments')
               .send({
@@ -283,7 +293,7 @@ describe('/api', () => {
               .expect(400);
             expect(res.body.msg).toBe('Bad Request');
           });
-          test('400:responds with a "bad request" message when passed an invalid review_id', async () => {
+          test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
             res = await request(app)
               .post('/api/reviews/200/comments')
               .send({
