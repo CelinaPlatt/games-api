@@ -90,6 +90,12 @@ describe('/api', () => {
             descending: true,
           });
         });
+        test('400:responds with a "bad request" message when passed an invalid order value', async () => {
+          const res = await request(app)
+            .get('/api/reviews?order=bananas')
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
       });
       describe('?category=category-name', () => {
         test('200:review objects are sorted by category specified', async () => {
