@@ -277,7 +277,7 @@ describe('/api', () => {
             res = await request(app)
               .post('/api/reviews/2/comments')
               .send({
-                comment_id:9009,
+                comment_id: 9009,
                 country: 'UK',
                 username: 'mallionaire',
                 body: "This is my sister's cat's absolute favourite!",
@@ -323,6 +323,18 @@ describe('/api', () => {
               .expect(400);
             expect(res.body.msg).toBe('Bad Request');
           });
+        });
+      });
+    });
+  });
+  describe('/comments', () => {
+    describe('/:comment_id', () => {
+      describe('DELETE', () => {
+        test('204:responds with an empty body after successfully deleting the specified comment, when passed a valid comment_id', async () => {
+          const res = await request(app)
+          .delete('/api/comments/2')
+          .expect(204);
+          expect(res.body).toEqual({});
         });
       });
     });
