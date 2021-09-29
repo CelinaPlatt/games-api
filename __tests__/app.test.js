@@ -107,6 +107,12 @@ describe('/api', () => {
             expect(review.category).toBe('social deduction');
           });
         });
+        test('200:responds with an empty array of reviews when passed a valid category but has no reviews', async () => {
+          const res = await request(app)
+            .get('/api/reviews?category=children%27s%20games')
+            .expect(200);
+          expect(res.body.reviews).toHaveLength(0);
+        });
         test('400:responds with a "bad request" message when passed a non-existent category', async () => {
           const res = await request(app)
             .get('/api/reviews?category=bananas')
@@ -185,15 +191,15 @@ describe('/api', () => {
         });
         test('404:responds with a "Not Found" message when passed a valid review_id that does not exist yet', async () => {
           res = await request(app)
-          .patch('/api/reviews/20')
-          .send({ inc_votes: -10 })
-          .expect(404);
+            .patch('/api/reviews/20')
+            .send({ inc_votes: -10 })
+            .expect(404);
           expect(res.body.msg).toBe('Not Found');
         });
         test('400:responds with a "Bad Request" message when passed an empty body', async () => {
           res = await request(app)
             .patch('/api/reviews/12')
-            .send({ })
+            .send({})
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
