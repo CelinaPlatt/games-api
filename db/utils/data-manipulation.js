@@ -1,5 +1,3 @@
-// extract any functions you are using to manipulate your data, into this file
-
 const formatData = (data, properties) => {
   const formattedData = data.map((object) => {
     const formattedObject = properties.map((property) => {
