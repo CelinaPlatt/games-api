@@ -242,7 +242,7 @@ describe('/api', () => {
               .expect(400);
             expect(res.body.msg).toBe('Bad Request');
           });
-          test('404:responds with a "Not Found" message when passed when passed a valid review_id that does not exist yet', async () => {
+          test('404:responds with a "Not Found" message when passed a valid review_id that does not exist yet', async () => {
             res = await request(app)
               .get('/api/reviews/300/comments')
               .expect(404);
@@ -331,10 +331,12 @@ describe('/api', () => {
     describe('/:comment_id', () => {
       describe('DELETE', () => {
         test('204:responds with an empty body after successfully deleting the specified comment, when passed a valid comment_id', async () => {
-          const res = await request(app)
-          .delete('/api/comments/2')
-          .expect(204);
+          const res = await request(app).delete('/api/comments/2').expect(204);
           expect(res.body).toEqual({});
+        });
+        test('404:responds with a "Not Found" message when passed a valid comment_id that does not exist yet', async() => {
+          const res = await request(app).delete('/api/comments/200').expect(404);
+          expect(res.body.msg).toBe('Not Found');
         });
       });
     });
