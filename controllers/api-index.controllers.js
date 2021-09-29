@@ -1,4 +1,4 @@
-const { readEndpointsJson } = require('../models/api-index.modelsjs');
+const { readEndpointsJson } = require('../models/api-index.models.js');
 
 exports.getApiEndpoints = async (req, res, next) => {
   try {
