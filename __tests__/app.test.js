@@ -362,6 +362,19 @@ describe('/api', () => {
             created_at: expect.any(String)  
           });
         });
+        test.only('200:works for decrementing votes too', async () => {
+          const res = await request(app)
+            .patch('/api/comments/3')
+            .send({ inc_votes: -10 })
+            .expect(200);
+          expect(res.body.comment).toMatchObject({
+            body: expect.any(String),
+            votes: '0',
+            author: expect.any(String),
+            review_id: expect.any(Number),
+            created_at: expect.any(String)  
+          });
+        });
         test('400:responds with a "Bad Request" message when passed an invalid comment_id', async () => {
           const res = await request(app)
             .patch('/api/comments/ab')
