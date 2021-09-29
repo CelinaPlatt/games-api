@@ -16,7 +16,7 @@ describe('/api', () => {
           'GET /api',
           'GET /api/categories',
           'GET /api/reviews',
-          "GET /api/reviews/:review_id",
+          'GET /api/reviews/:review_id',
           'PATCH /api/reviews/:review_id',
           'GET /api/reviews/:review_id/comments',
           'POST /api/reviews/:review_id/comments',
@@ -130,11 +130,11 @@ describe('/api', () => {
         });
       });
       describe('PATCH', () => {
-        test('201:responds with the updated review object, when passed an object specifying the number of votes to increment :{ inc_votes: newVoteNum } ', async () => {
+        test('200:responds with the updated review object, when passed an object specifying the number of votes to increment :{ inc_votes: newVoteNum } ', async () => {
           res = await request(app)
             .patch('/api/reviews/12')
             .send({ inc_votes: 20 })
-            .expect(201);
+            .expect(200);
           expect(res.body.review).toMatchObject({
             owner: expect.any(String),
             title: expect.any(String),
@@ -147,11 +147,11 @@ describe('/api', () => {
             votes: '120',
           });
         });
-        test('201:works for decrementing votes too', async () => {
+        test('200:works for decrementing votes too', async () => {
           res = await request(app)
             .patch('/api/reviews/12')
             .send({ inc_votes: -20 })
-            .expect(201);
+            .expect(200);
           expect(res.body.review).toMatchObject({
             owner: expect.any(String),
             title: expect.any(String),

@@ -26,7 +26,7 @@ exports.patchReviewById = async (req, res, next) => {
   try {
     const patchedReviewData = await updateReviewById(review_id, inc_votes);
     if (patchedReviewData) {
-      res.status(201).send({ review: patchedReviewData });
+      res.status(200).send({ review: patchedReviewData });
     } else {
       await Promise.reject({ status: 404, msg: 'Not Found' });
     }
