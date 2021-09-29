@@ -237,7 +237,7 @@ describe('formatCommentData', () => {
         'mallionaire',
         3,
         13,
-        new Date(1610964545410),
+        '2021-01-18 10:09:05.410',
         'My dog loved this game too!',
       ],
     ];

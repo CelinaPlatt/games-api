@@ -44,13 +44,17 @@ const formatTimeStamp = (object) => {
 };
 
 const formatCommentData = (commentData) => {
-  return formatData(commentData, [
+  const formattedTimeStampData = commentData.map((comment) => {
+    return formatTimeStamp(comment);
+  });
+  const formattedData = formatData(formattedTimeStampData, [
     'author',
     'review_id',
     'votes',
     'created_at',
     'body',
   ]);
+  return formattedData;
 };
 
 module.exports = {
