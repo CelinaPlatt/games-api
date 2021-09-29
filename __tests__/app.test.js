@@ -107,6 +107,12 @@ describe('/api', () => {
             expect(review.category).toBe('social deduction');
           });
         });
+        test('400:responds with a "bad request" message when passed a non-existent category', async () => {
+          const res = await request(app)
+            .get('/api/reviews?category=bananas')
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
       });
     });
     describe('/:review_id', () => {

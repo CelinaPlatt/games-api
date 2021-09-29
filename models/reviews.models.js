@@ -3,6 +3,7 @@ const db = require('../db/connection');
 const { sort } = require('../db/data/test-data/reviews');
 const reviews = require('../db/data/test-data/reviews');
 const { formatCommentData } = require('../db/utils/data-manipulation');
+const { fetchCategories } = require('./categories.models');
 
 exports.fetchEndpointsJson = async () => {};
 
@@ -62,6 +63,15 @@ exports.fetchReviews = async (
   ];
 
   if (!validSortByColumns.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
+
+  const fetchedCategories = await fetchCategories();
+  const validCategories = fetchedCategories.map((category) => {
+    return category.slug;
+  });
+
+  if (category && !validCategories.includes(category)) {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
