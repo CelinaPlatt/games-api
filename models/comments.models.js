@@ -15,13 +15,26 @@ exports.deleteFromByCommentId = async (comment_id) => {
 const checkCommentExists = async (comment_id) => {
   const result = await db.query(
     `
-      SELECT * FROM comments
-      WHERE comment_id = $1;
-      `,
+        SELECT * FROM comments
+        WHERE comment_id = $1;
+    `,
     [comment_id]
   );
 
   if (result.rows.length === 0) {
     return Promise.reject({ status: 404, msg: 'Not Found' });
   }
+};
+
+exports.updateCommentById = async (comment_id, newVote) => {
+  const result = await db.query(
+    `
+        UPDATE comments
+        SET votes = votes + $1
+        WHERE comment_id = $2 
+        RETURNING *;
+    `,
+    [newVote, comment_id]
+  );
+  return result.rows[0];
 };

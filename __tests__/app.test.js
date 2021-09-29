@@ -3,6 +3,7 @@ const testData = require('../db/data/test-data/index.js');
 const seed = require('../db/seeds/seed.js');
 const request = require('supertest');
 const app = require('../app.js');
+const { string } = require('pg-format');
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -148,7 +149,7 @@ describe('/api', () => {
         });
       });
       describe('PATCH', () => {
-        test('200:responds with the updated review object, when passed an object specifying the number of votes to increment :{ inc_votes: newVoteNum } ', async () => {
+        test('200:responds with the updated review object, when passed an object specifying the number of votes to increment: { inc_votes: newVoteNum } ', async () => {
           res = await request(app)
             .patch('/api/reviews/12')
             .send({ inc_votes: 20 })
@@ -345,6 +346,21 @@ describe('/api', () => {
             .delete('/api/comments/ab2')
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
+        });
+      });
+      describe('PATCH', () => {
+        test('200:responds with the updated comment object, when passed an object specifying the number of votes to increment: { inc_votes: newVoteNum } ', async () => {
+          const res = await request(app)
+            .patch('/api/comments/3')
+            .send({ inc_votes: 20 })
+            .expect(200);
+          expect(res.body.comment).toMatchObject({
+            body: expect.any(String),
+            votes: '30',
+            author: expect.any(String),
+            review_id: expect.any(Number),
+            created_at: expect.any(String)  
+          });
         });
       });
     });
