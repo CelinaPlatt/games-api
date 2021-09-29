@@ -198,10 +198,7 @@ describe('/api', () => {
           expect(res.body.msg).toBe('Not Found');
         });
         test('400:responds with a "Bad Request" message when passed an empty body', async () => {
-          res = await request(app)
-            .patch('/api/reviews/12')
-            .send()
-            .expect(400);
+          res = await request(app).patch('/api/reviews/12').send().expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
         test('400:responds with a "Bad Request" message when an invalid property name in the body', async () => {
@@ -359,10 +356,10 @@ describe('/api', () => {
             votes: '30',
             author: expect.any(String),
             review_id: expect.any(Number),
-            created_at: expect.any(String)  
+            created_at: expect.any(String),
           });
         });
-        test.only('200:works for decrementing votes too', async () => {
+        test('200:works for decrementing votes too', async () => {
           const res = await request(app)
             .patch('/api/comments/3')
             .send({ inc_votes: -10 })
@@ -372,7 +369,7 @@ describe('/api', () => {
             votes: '0',
             author: expect.any(String),
             review_id: expect.any(Number),
-            created_at: expect.any(String)  
+            created_at: expect.any(String),
           });
         });
         test('400:responds with a "Bad Request" message when passed an invalid comment_id', async () => {
@@ -409,6 +406,33 @@ describe('/api', () => {
             .send({ bananas: 2 })
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
+        });
+      });
+    });
+  });
+  describe('/users', () => {
+    describe('GET', () => {
+      test('200:responds with an array of user objects', async () => {
+        const res = await request(app).get('/api/users').expect(200);
+        expect(res.body.users).toHaveLength(4);
+        res.body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+    });
+    describe('/:username', () => {
+      describe('GET', () => {
+        test('200:responds with a user object', async () => {
+          const res = await request(app).get('/api/users/mallionaire').expect(200);
+          expect(res.body.user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
         });
       });
     });
