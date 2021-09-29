@@ -364,16 +364,22 @@ describe('/api', () => {
         });
         test('400:responds with a "Bad Request" message when passed an invalid comment_id', async () => {
           const res = await request(app)
-            .delete('/api/comments/ab')
+            .patch('/api/comments/ab')
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
         test('404:responds with a "Not Found" message when passed a valid comment_id that does not exist yet', async () => {
           const res = await request(app)
-            .delete('/api/comments/200')
+            .patch('/api/comments/200')
             .expect(404);
           expect(res.body.msg).toBe('Not Found');
         });
+        // test('400:responds with a "Bad Request" message when passed an empty request body', async () => {
+        //   const res = await request(app)
+        //     .patch('/api/comments/2')
+        //     .expect(400);
+        //   expect(res.body.msg).toBe('Bad Request');
+        // });
       });
     });
   });

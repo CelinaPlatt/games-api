@@ -27,6 +27,7 @@ const checkCommentExists = async (comment_id) => {
 };
 
 exports.updateCommentById = async (comment_id, newVote) => {
+  await checkCommentExists(comment_id);
   const result = await db.query(
     `
         UPDATE comments
