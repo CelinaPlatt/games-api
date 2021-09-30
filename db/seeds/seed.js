@@ -26,7 +26,7 @@ const seed = async (data) => {
     `
     CREATE TABLE users (
       username VARCHAR(30) PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
+      name VARCHAR(30) NOT NULL,
       avatar_url VARCHAR(400) NOT NULL
     );
     `
@@ -42,7 +42,7 @@ const seed = async (data) => {
       review_img_url VARCHAR(500) DEFAULT 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
       votes NUMERIC DEFAULT 0,
       category VARCHAR(100) REFERENCES categories(slug),
-      owner VARCHAR(100) REFERENCES users(username),
+      owner VARCHAR(30) REFERENCES users(username),
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
     `
@@ -52,7 +52,7 @@ const seed = async (data) => {
     `
     CREATE TABLE comments (
       comment_id SERIAL PRIMARY KEY,
-      author VARCHAR(100) REFERENCES users(username) NOT  NULL,
+      author VARCHAR(30) REFERENCES users(username) NOT  NULL,
       review_id INTEGER REFERENCES reviews(review_id) ON DELETE CASCADE,
       votes NUMERIC DEFAULT 0,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
