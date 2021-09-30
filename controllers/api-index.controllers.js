@@ -3,7 +3,7 @@ const { readEndpointsJson } = require('../models/api-index.models.js');
 exports.getApiEndpoints = async (req, res, next) => {
   try {
     const endpointsIndexData = await readEndpointsJson();
-    res.status(200).send({ endpoints: endpointsIndexData });
+    res.status(200).send({ msg: "Deployed with CI/CD", endpoints: endpointsIndexData });
   } catch (err) {
     next(err);
   }
