@@ -431,14 +431,25 @@ describe('/api', () => {
           .send({
             username: 'Pete.P',
             name: 'Peter Petterson',
-            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg'
+            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
           })
           .expect(200);
-          expect(res.body.user).toMatchObject({
-            username: 'Pete.P',
+        expect(res.body.user).toMatchObject({
+          username: 'Pete.P',
+          name: 'Peter Petterson',
+          avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
+        });
+      });
+      test('400:responds with a "Bad Request" message when passed an invalid username', async () => {
+        const res = await request(app)
+          .post('/api/users')
+          .send({
+            username: 'Pete P',
             name: 'Peter Petterson',
-            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg'
+            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
           })
+          .expect(400);
+        expect(res.body.msg).toBe('Bad Request');
       });
     });
     describe('/:username', () => {
