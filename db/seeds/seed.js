@@ -25,7 +25,7 @@ const seed = async (data) => {
   await db.query(
     `
     CREATE TABLE users (
-      username VARCHAR(100) PRIMARY KEY,
+      username VARCHAR(30) PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
       avatar_url VARCHAR(400) NOT NULL
     );
