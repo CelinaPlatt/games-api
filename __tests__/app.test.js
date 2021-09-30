@@ -424,6 +424,23 @@ describe('/api', () => {
         });
       });
     });
+    describe('POST', () => {
+      test('201:responds with the newly posted user object', async () => {
+        const res = await request(app)
+          .post('/api/users')
+          .send({
+            username: 'Pete.P',
+            name: 'Peter Petterson',
+            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg'
+          })
+          .expect(200);
+          expect(res.body.user).toMatchObject({
+            username: 'Pete.P',
+            name: 'Peter Petterson',
+            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg'
+          })
+      });
+    });
     describe('/:username', () => {
       describe('GET', () => {
         test('200:responds with a user object', async () => {
