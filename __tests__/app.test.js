@@ -433,7 +433,23 @@ describe('/api', () => {
             name: 'Peter Petterson',
             avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
           })
-          .expect(200);
+          .expect(201);
+        expect(res.body.user).toMatchObject({
+          username: 'Pete.P',
+          name: 'Peter Petterson',
+          avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
+        });
+      });
+      test('201:ignores unnecessary properties', async () => {
+        const res = await request(app)
+          .post('/api/users')
+          .send({
+            username: 'Pete.P',
+            name: 'Peter Petterson',
+            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
+            age: 23,
+          })
+          .expect(201);
         expect(res.body.user).toMatchObject({
           username: 'Pete.P',
           name: 'Peter Petterson',
@@ -446,6 +462,27 @@ describe('/api', () => {
           .send({
             username: 'Pete P',
             name: 'Peter Petterson',
+            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
+          })
+          .expect(400);
+        expect(res.body.msg).toBe('Bad Request');
+      });
+      test('400:responds with a "Bad Request" message when passed an invalid body request missing required fields (username or name)', async () => {
+        const res = await request(app)
+          .post('/api/users')
+          .send({
+            username: 'Pete.P',
+            avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
+          })
+          .expect(400);
+        expect(res.body.msg).toBe('Bad Request');
+      });
+      test('400:responds with a "Bad Request" message when passed an invalid body request with invalid values on the required fields (username or name)', async () => {
+        const res = await request(app)
+          .post('/api/users')
+          .send({
+            username: 'Pete.P',
+            name: 33,
             avatar_url: 'https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg',
           })
           .expect(400);

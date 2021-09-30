@@ -31,7 +31,7 @@ exports.postNewUser = async (req, res, next) => {
   const { username, name, avatar_url } = req.body;
   try {
     const newUserData = await insertNewUser(username, name, avatar_url);
-    res.status(200).send({ user: newUserData });
+    res.status(201).send({ user: newUserData });
   } catch (err) {
     next(err);
   }
