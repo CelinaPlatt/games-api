@@ -427,12 +427,20 @@ describe('/api', () => {
     describe('/:username', () => {
       describe('GET', () => {
         test('200:responds with a user object', async () => {
-          const res = await request(app).get('/api/users/mallionaire').expect(200);
+          const res = await request(app)
+            .get('/api/users/mallionaire')
+            .expect(200);
           expect(res.body.user).toMatchObject({
             username: expect.any(String),
             name: expect.any(String),
             avatar_url: expect.any(String),
           });
+        });
+        test('404:responds with a "Not Found" message when passed a valid but non-existant username', async () => {
+          const res = await request(app)
+            .get('/api/users/Mr-Mittens')
+            .expect(404);
+          expect(res.body.msg).toBe('Not Found');
         });
       });
     });

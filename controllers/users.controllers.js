@@ -11,9 +11,14 @@ exports.getUsers = async (req, res, next) => {
 
 exports.getUserByUsername = async (req, res, next) => {
   const { username } = req.params;
+  console.log(username, '<< controller username');
   try {
     const userData = await fetchUserByUsername(username);
-    res.status(200).send({ user: userData });
+    if (userData) {
+      res.status(200).send({ user: userData });
+    } else {
+      await Promise.reject({ status: 404, msg: 'Not Found' });
+    }
   } catch (err) {
     next(err);
   }
