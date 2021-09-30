@@ -438,9 +438,15 @@ describe('/api', () => {
         });
         test('404:responds with a "Not Found" message when passed a valid but non-existant username', async () => {
           const res = await request(app)
-            .get('/api/users/Mr-Mittens')
+            .get('/api/users/Mr_Mittens')
             .expect(404);
           expect(res.body.msg).toBe('Not Found');
+        });
+        test('400:responds with a "Bad Request" message when passed an invalid username - has spaces, special characters (other than "_" and ".") or is longer than 30 chars', async () => {
+          const res = await request(app)
+            .get('/api/users/dolores%2030*')
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
         });
       });
     });

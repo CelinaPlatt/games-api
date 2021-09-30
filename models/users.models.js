@@ -10,6 +10,12 @@ exports.fetchUsers = async () => {
 };
 
 exports.fetchUserByUsername = async (username) => {
+  const hasInvalidChar = /[^a-z0-9\._]/i.test(username);
+
+  if (hasInvalidChar || username.length > 30) {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
+
   const result = await db.query(
     `
         SELECT * FROM users

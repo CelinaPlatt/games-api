@@ -11,7 +11,6 @@ exports.getUsers = async (req, res, next) => {
 
 exports.getUserByUsername = async (req, res, next) => {
   const { username } = req.params;
-  console.log(username, '<< controller username');
   try {
     const userData = await fetchUserByUsername(username);
     if (userData) {
