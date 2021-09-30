@@ -9,5 +9,6 @@ jobs:
   greeting:
     runs-on: ubuntu-latest
     steps: 
-      -name: Say Hello
-      run: echo 'Hello from CI'
+      - name: Say Hello
+        run: echo 'Hello from CI'
+      
