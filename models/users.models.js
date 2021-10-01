@@ -58,8 +58,12 @@ exports.updateUser = async (username, name, avatar_url) => {
 
   const nameIsInvalid = /[^a-z\s]/i.test(name);
 
-
-  if (usernameIsInvalid || username.length > 30 || (!name && !avatar_url) || nameIsInvalid) {
+  if (
+    usernameIsInvalid ||
+    username.length > 30 ||
+    (!name && !avatar_url) ||
+    nameIsInvalid
+  ) {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
@@ -67,9 +71,11 @@ exports.updateUser = async (username, name, avatar_url) => {
   UPDATE users SET
   `;
   let queryValues = [];
+
   if (name) {
     queryStr += 'name = $1';
     queryValues.push(name);
+
     if (avatar_url) {
       queryStr += `
         , avatar_url = $2 
@@ -82,6 +88,7 @@ exports.updateUser = async (username, name, avatar_url) => {
         WHERE username = $2
         RETURNING *;
       `;
+      queryValues.push(username);
     }
   } else if (!name && avatar_url) {
     queryStr += `

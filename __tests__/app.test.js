@@ -531,6 +531,50 @@ describe('/api', () => {
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
           });
         });
+        test('200:works to update only the name', async () => {
+          const res = await request(app)
+            .patch('/api/users/bainesface')
+            .send({
+              name: 'Diana',
+            })
+            .expect(200);
+          expect(res.body.user).toMatchObject({
+            username: 'bainesface',
+            name: 'Diana',
+            avatar_url:
+              'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4',
+          });
+        });
+        test('200:works to update only the avatar_url', async () => {
+          const res = await request(app)
+            .patch('/api/users/bainesface')
+            .send({
+              avatar_url:
+                'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
+            })
+            .expect(200);
+          expect(res.body.user).toMatchObject({
+            username: 'bainesface',
+            name: 'sarah',
+            avatar_url:
+              'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
+          });
+        });
+        test('200:ignores unnecessary properties', async () => {
+          const res = await request(app)
+            .patch('/api/users/bainesface')
+            .send({
+              name: 'Diana',
+              age: 20,
+            })
+            .expect(200);
+          expect(res.body.user).toMatchObject({
+            username: 'bainesface',
+            name: 'Diana',
+            avatar_url:
+              'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4',
+          });
+        });
         test('400:responds with a "Bad Request" message when passed an invalid username - has spaces, special characters (other than "_" and ".") or is longer than 30 chars', async () => {
           const res = await request(app)
             .patch('/api/users/baines*face')
@@ -577,7 +621,7 @@ describe('/api', () => {
             })
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
-        });        
+        });
       });
     });
   });
