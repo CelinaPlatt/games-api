@@ -40,10 +40,14 @@ exports.postNewUser = async (req, res, next) => {
 
 exports.patchUser = async (req, res, next) => {
   const { username } = req.params;
-  const {name , avatar_url} = req.body;
+  const { name, avatar_url } = req.body;
   try {
-    const updatedUserData = await updateUser(username,name,avatar_url);
-    res.status(200).send({ user: updatedUserData });
+    const updatedUserData = await updateUser(username, name, avatar_url);
+    if (updatedUserData) {
+      res.status(200).send({ user: updatedUserData });
+    } else {
+      await Promise.reject({ status: 404, msg: 'Not Found' });
+    }
   } catch (err) {
     next(err);
   }

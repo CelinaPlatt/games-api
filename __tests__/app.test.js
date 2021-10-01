@@ -542,6 +542,17 @@ describe('/api', () => {
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
+        test('404:responds with a "Not Found" message when passed a valid but non-existant username', async () => {
+          const res = await request(app)
+            .patch('/api/users/Mr_Mittens')
+            .send({
+              name: 'Bob Bobcat',
+              avatar_url:
+                'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
+            })
+            .expect(404);
+          expect(res.body.msg).toBe('Not Found');
+        });
       });
     });
   });
