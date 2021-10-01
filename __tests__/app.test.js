@@ -208,7 +208,7 @@ describe('/api', () => {
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
-        test('400:responds with a "Bad Request" message when passed an invalid value type in the body', async () => {
+        test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
           res = await request(app)
             .patch('/api/reviews/12')
             .send({ inc_votes: 'A' })
@@ -553,6 +553,31 @@ describe('/api', () => {
             .expect(404);
           expect(res.body.msg).toBe('Not Found');
         });
+        test('400:responds with a "Bad Request" message when passed an empty request body', async () => {
+          res = await request(app)
+            .patch('/api/users/bainesface')
+            .send()
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when passed an invalid property in the body (should at least have one of the required properties:`name` or `avatar_url`', async () => {
+          res = await request(app)
+            .patch('/api/users/bainesface')
+            .send({ names: 'Bob Bobcat' })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
+          res = await request(app)
+            .patch('/api/users/bainesface')
+            .send({
+              name: 'Bob Bobcat!',
+              avatar_url:
+                'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
+            })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });        
       });
     });
   });

@@ -56,7 +56,10 @@ exports.insertNewUser = async (username, name, avatar_url) => {
 exports.updateUser = async (username, name, avatar_url) => {
   const usernameIsInvalid = /[^a-z0-9\._]/i.test(username);
 
-  if (usernameIsInvalid || username.length > 30) {
+  const nameIsInvalid = /[^a-z\s]/i.test(name);
+
+
+  if (usernameIsInvalid || username.length > 30 || (!name && !avatar_url) || nameIsInvalid) {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
