@@ -487,6 +487,39 @@ describe('/api', () => {
             expect(res.body.msg).toBe('Bad Request');
           });
         });
+        describe('comment body', () => {
+          test('200:responds with the updated review object', async () => {
+            const res = await request(app)
+              .patch('/api/comments/1')
+              .send({
+                body: 'aMEOWzing!',
+              })
+              .expect(200);
+            expect(res.body.comment).toMatchObject({
+              body: 'aMEOWzing!',
+              votes: expect.any(String),
+              author: expect.any(String),
+              review_id: expect.any(Number),
+              created_at: expect.any(String),
+            });
+          });
+          test('200:works to update both `review_body` and `votes` properties', async () => {
+            const res = await request(app)
+              .patch('/api/comments/1')
+              .send({
+                body: 'aMEOWzing!',
+                inc_votes: -6,
+              })
+              .expect(200);
+            expect(res.body.comment).toMatchObject({
+              body: 'aMEOWzing!',
+              votes: '10',
+              author: expect.any(String),
+              review_id: expect.any(Number),
+              created_at: expect.any(String),
+            });
+          });
+        });
       });
     });
   });

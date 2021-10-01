@@ -31,14 +31,31 @@ exports.updateCommentById = async (comment_id, newVote, body) => {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
-  const result = await db.query(
-    `
-        UPDATE comments
-        SET votes = votes + $1
-        WHERE comment_id = $2 
-        RETURNING *;
-    `,
-    [newVote, comment_id]
-  );
+  let queryStr = 'UPDATE comments SET';
+  const queryValues = [];
+  let valCount = 1;
+
+  if (newVote) {
+    queryStr += ` votes = votes + $${valCount}`;
+    queryValues.push(newVote);
+    valCount++;
+  }
+  if (body) {
+    if (newVote) {
+      queryStr += ',';
+    }
+    queryStr += ` body = $${valCount}`;
+    queryValues.push(body);
+    valCount++;
+  }
+
+  queryStr += ` 
+    WHERE comment_id = $${valCount} 
+    RETURNING *;
+  `;
+  queryValues.push(comment_id);
+
+  const result = await db.query(queryStr, queryValues);
+
   return result.rows[0];
 };
