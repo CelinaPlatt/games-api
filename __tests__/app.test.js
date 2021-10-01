@@ -287,7 +287,7 @@ describe('/api', () => {
             expect(res.body.msg).toBe('Bad Request');
           });
           test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
-           const res = await request(app)
+            const res = await request(app)
               .patch('/api/reviews/2')
               .send({ review_body: 34 })
               .expect(400);
