@@ -1,8 +1,4 @@
-const { patchReviewById } = require('../controllers/reviews.controllers');
 const db = require('../db/connection');
-const { sort } = require('../db/data/test-data/reviews');
-const reviews = require('../db/data/test-data/reviews');
-const { formatCommentData } = require('../db/utils/data-manipulation');
 const { fetchCategories } = require('./categories.models');
 
 exports.fetchEndpointsJson = async () => {};
@@ -24,21 +20,32 @@ exports.fetchReviewsById = async (review_id) => {
   return reviewData;
 };
 
-exports.updateReviewById = async (review_id, newVote) => {
-  if (newVote) {
-    const patchedReviewData = await db.query(
-      `
-    UPDATE reviews
-    SET votes = votes + $1
-    WHERE review_id = $2 
-    RETURNING *;
-    `,
-      [newVote, review_id]
-    );
-    return patchedReviewData.rows[0];
-  } else {
+exports.updateReviewById = async (review_id, newVote, review_body) => {
+  if (!newVote && !review_body) {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
+
+  let queryStr = `UPDATE reviews SET`;
+  let valCount = 1;
+  const queryValues = [];
+
+  if (newVote) {
+    queryStr += ` votes = votes + $${valCount}`;
+    queryValues.push(newVote);
+    valCount++;
+  }
+  if (review_body) {
+    queryStr += ` review_body = $${valCount}`;
+    queryValues.push(review_body);
+    valCount++;
+  }
+
+  queryStr += ` WHERE review_id = $${valCount} RETURNING *`;
+  queryValues.push(review_id);
+
+  const result = await db.query(queryStr, queryValues);
+
+  return result.rows[0];
 };
 
 exports.fetchReviews = async (

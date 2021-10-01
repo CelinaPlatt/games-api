@@ -220,6 +220,26 @@ describe('/api', () => {
             expect(res.body.msg).toBe('Bad Request');
           });
         });
+        describe('review body', () => {
+          test('200:responds with the updated review object', async () => {
+            const res = await request(app)
+              .patch('/api/reviews/2')
+              .send({
+                review_body: 'Not suitable for the clumsy',
+              })
+              .expect(200);
+            expect(res.body.review).toMatchObject({
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              review_body: 'Not suitable for the clumsy',
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(String),
+            });
+          });
+        });
       });
       describe('/comments', () => {
         describe('GET', () => {
@@ -295,7 +315,6 @@ describe('/api', () => {
               body: "This is my sister's cat's absolute favourite!",
             });
           });
-
           test('400:responds with a "Bad Request" message when passed an invalid review_id ', async () => {
             res = await request(app)
               .post('/api/reviews/a/comments')
@@ -351,70 +370,70 @@ describe('/api', () => {
         });
       });
       describe('PATCH', () => {
-       describe('comment votes', () => {
-        test('200:responds with the updated comment object, when passed an object specifying the number of votes to increment: { inc_votes: newVoteNum } ', async () => {
-          const res = await request(app)
-            .patch('/api/comments/3')
-            .send({ inc_votes: 20 })
-            .expect(200);
-          expect(res.body.comment).toMatchObject({
-            body: expect.any(String),
-            votes: '30',
-            author: expect.any(String),
-            review_id: expect.any(Number),
-            created_at: expect.any(String),
+        describe('comment votes', () => {
+          test('200:responds with the updated comment object, when passed an object specifying the number of votes to increment: { inc_votes: newVoteNum } ', async () => {
+            const res = await request(app)
+              .patch('/api/comments/3')
+              .send({ inc_votes: 20 })
+              .expect(200);
+            expect(res.body.comment).toMatchObject({
+              body: expect.any(String),
+              votes: '30',
+              author: expect.any(String),
+              review_id: expect.any(Number),
+              created_at: expect.any(String),
+            });
           });
-        });
-        test('200:works for decrementing votes too', async () => {
-          const res = await request(app)
-            .patch('/api/comments/3')
-            .send({ inc_votes: -10 })
-            .expect(200);
-          expect(res.body.comment).toMatchObject({
-            body: expect.any(String),
-            votes: '0',
-            author: expect.any(String),
-            review_id: expect.any(Number),
-            created_at: expect.any(String),
+          test('200:works for decrementing votes too', async () => {
+            const res = await request(app)
+              .patch('/api/comments/3')
+              .send({ inc_votes: -10 })
+              .expect(200);
+            expect(res.body.comment).toMatchObject({
+              body: expect.any(String),
+              votes: '0',
+              author: expect.any(String),
+              review_id: expect.any(Number),
+              created_at: expect.any(String),
+            });
           });
-        });
-        test('400:responds with a "Bad Request" message when passed an invalid comment_id', async () => {
-          const res = await request(app)
-            .patch('/api/comments/ab')
-            .send({ inc_votes: 20 })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('404:responds with a "Not Found" message when passed a valid comment_id that does not exist yet', async () => {
-          const res = await request(app)
-            .patch('/api/comments/200')
-            .send({ inc_votes: 20 })
-            .expect(404);
-          expect(res.body.msg).toBe('Not Found');
-        });
-        test('400:responds with a "Bad Request" message when passed an incorrect body: empty request body', async () => {
-          const res = await request(app)
-            .patch('/api/comments/2')
-            .send()
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('400:responds with a "Bad Request" message when passed an incorrect property: property is not a number', async () => {
-          const res = await request(app)
-            .patch('/api/comments/2')
-            .send({ inc_votes: 'a' })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('400:responds with a "Bad Request" message when passed an incorrect property: property is missing', async () => {
-          const res = await request(app)
-            .patch('/api/comments/2')
-            .send({ bananas: 2 })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
+          test('400:responds with a "Bad Request" message when passed an invalid comment_id', async () => {
+            const res = await request(app)
+              .patch('/api/comments/ab')
+              .send({ inc_votes: 20 })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('404:responds with a "Not Found" message when passed a valid comment_id that does not exist yet', async () => {
+            const res = await request(app)
+              .patch('/api/comments/200')
+              .send({ inc_votes: 20 })
+              .expect(404);
+            expect(res.body.msg).toBe('Not Found');
+          });
+          test('400:responds with a "Bad Request" message when passed an incorrect body: empty request body', async () => {
+            const res = await request(app)
+              .patch('/api/comments/2')
+              .send()
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when passed an incorrect property: property is not a number', async () => {
+            const res = await request(app)
+              .patch('/api/comments/2')
+              .send({ inc_votes: 'a' })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when passed an incorrect property: property is missing', async () => {
+            const res = await request(app)
+              .patch('/api/comments/2')
+              .send({ bananas: 2 })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
         });
       });
-       });
     });
   });
   describe('/users', () => {
@@ -522,115 +541,115 @@ describe('/api', () => {
         });
       });
       describe('PATCH', () => {
-       describe('name and avatar_url', () => {
-        test('200:responds with the updated user object,when passed a request body with the name and avatar_url properties', async () => {
-          const res = await request(app)
-            .patch('/api/users/bainesface')
-            .send({
+        describe('name and avatar_url', () => {
+          test('200:responds with the updated user object,when passed a request body with the name and avatar_url properties', async () => {
+            const res = await request(app)
+              .patch('/api/users/bainesface')
+              .send({
+                name: 'Diana',
+                avatar_url:
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
+              })
+              .expect(200);
+            expect(res.body.user).toMatchObject({
+              username: 'bainesface',
               name: 'Diana',
               avatar_url:
                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
-            })
-            .expect(200);
-          expect(res.body.user).toMatchObject({
-            username: 'bainesface',
-            name: 'Diana',
-            avatar_url:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
+            });
           });
-        });
-        test('200:works to update only the name', async () => {
-          const res = await request(app)
-            .patch('/api/users/bainesface')
-            .send({
-              name: 'Diana',
-            })
-            .expect(200);
-          expect(res.body.user).toMatchObject({
-            username: 'bainesface',
-            name: 'Diana',
-            avatar_url:
-              'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4',
-          });
-        });
-        test('200:works to update only the avatar_url', async () => {
-          const res = await request(app)
-            .patch('/api/users/bainesface')
-            .send({
-              avatar_url:
-                'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
-            })
-            .expect(200);
-          expect(res.body.user).toMatchObject({
-            username: 'bainesface',
-            name: 'sarah',
-            avatar_url:
-              'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
-          });
-        });
-        test('200:ignores unnecessary properties', async () => {
-          const res = await request(app)
-            .patch('/api/users/bainesface')
-            .send({
-              name: 'Diana',
-              age: 20,
-            })
-            .expect(200);
-          expect(res.body.user).toMatchObject({
-            username: 'bainesface',
-            name: 'Diana',
-            avatar_url:
-              'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4',
-          });
-        });
-        test('400:responds with a "Bad Request" message when passed an invalid username - has spaces, special characters (other than "_" and ".") or is longer than 30 chars', async () => {
-          const res = await request(app)
-            .patch('/api/users/baines*face')
-            .send({
+          test('200:works to update only the name', async () => {
+            const res = await request(app)
+              .patch('/api/users/bainesface')
+              .send({
+                name: 'Diana',
+              })
+              .expect(200);
+            expect(res.body.user).toMatchObject({
+              username: 'bainesface',
               name: 'Diana',
               avatar_url:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
-            })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('404:responds with a "Not Found" message when passed a valid but non-existant username', async () => {
-          const res = await request(app)
-            .patch('/api/users/Mr_Mittens')
-            .send({
-              name: 'Bob Bobcat',
+                'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4',
+            });
+          });
+          test('200:works to update only the avatar_url', async () => {
+            const res = await request(app)
+              .patch('/api/users/bainesface')
+              .send({
+                avatar_url:
+                  'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
+              })
+              .expect(200);
+            expect(res.body.user).toMatchObject({
+              username: 'bainesface',
+              name: 'sarah',
               avatar_url:
                 'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
-            })
-            .expect(404);
-          expect(res.body.msg).toBe('Not Found');
-        });
-        test('400:responds with a "Bad Request" message when passed an empty request body', async () => {
-          res = await request(app)
-            .patch('/api/users/bainesface')
-            .send()
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('400:responds with a "Bad Request" message when passed an invalid property in the body (should at least have one of the required properties:`name` or `avatar_url`', async () => {
-          res = await request(app)
-            .patch('/api/users/bainesface')
-            .send({ names: 'Bob Bobcat' })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
-          res = await request(app)
-            .patch('/api/users/bainesface')
-            .send({
-              name: 'Bob Bobcat!',
+            });
+          });
+          test('200:ignores unnecessary properties', async () => {
+            const res = await request(app)
+              .patch('/api/users/bainesface')
+              .send({
+                name: 'Diana',
+                age: 20,
+              })
+              .expect(200);
+            expect(res.body.user).toMatchObject({
+              username: 'bainesface',
+              name: 'Diana',
               avatar_url:
-                'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
-            })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
+                'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4',
+            });
+          });
+          test('400:responds with a "Bad Request" message when passed an invalid username - has spaces, special characters (other than "_" and ".") or is longer than 30 chars', async () => {
+            const res = await request(app)
+              .patch('/api/users/baines*face')
+              .send({
+                name: 'Diana',
+                avatar_url:
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
+              })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('404:responds with a "Not Found" message when passed a valid but non-existant username', async () => {
+            const res = await request(app)
+              .patch('/api/users/Mr_Mittens')
+              .send({
+                name: 'Bob Bobcat',
+                avatar_url:
+                  'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
+              })
+              .expect(404);
+            expect(res.body.msg).toBe('Not Found');
+          });
+          test('400:responds with a "Bad Request" message when passed an empty request body', async () => {
+            res = await request(app)
+              .patch('/api/users/bainesface')
+              .send()
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when passed an invalid property in the body (should at least have one of the required properties:`name` or `avatar_url`', async () => {
+            res = await request(app)
+              .patch('/api/users/bainesface')
+              .send({ names: 'Bob Bobcat' })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
+            res = await request(app)
+              .patch('/api/users/bainesface')
+              .send({
+                name: 'Bob Bobcat!',
+                avatar_url:
+                  'https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2021/04/1024/512/Bobcat-istock.jpg?ve=1&tl=1',
+              })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
         });
-       });
       });
     });
   });

@@ -22,9 +22,9 @@ exports.getReviewsById = async (req, res, next) => {
 
 exports.patchReviewById = async (req, res, next) => {
   const { review_id } = req.params;
-  const { inc_votes } = req.body;
+  const { inc_votes, review_body } = req.body;
   try {
-    const patchedReviewData = await updateReviewById(review_id, inc_votes);
+    const patchedReviewData = await updateReviewById(review_id, inc_votes,review_body);
     if (patchedReviewData) {
       res.status(200).send({ review: patchedReviewData });
     } else {
