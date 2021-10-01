@@ -239,6 +239,25 @@ describe('/api', () => {
               votes: expect.any(String),
             });
           });
+          test('200:works to update both `review_body` and `votes` properties', async () => {
+            const res = await request(app)
+              .patch('/api/reviews/2')
+              .send({
+                review_body: 'Not suitable for the clumsy',
+                inc_votes: 10,
+              })
+              .expect(200);
+            expect(res.body.review).toMatchObject({
+              title: expect.any(String),
+              designer: expect.any(String),
+              owner: expect.any(String),
+              review_img_url: expect.any(String),
+              review_body: 'Not suitable for the clumsy',
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: '15',
+            });
+          });    
         });
       });
       describe('/comments', () => {
@@ -654,3 +673,4 @@ describe('/api', () => {
     });
   });
 });
+

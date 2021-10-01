@@ -35,6 +35,9 @@ exports.updateReviewById = async (review_id, newVote, review_body) => {
     valCount++;
   }
   if (review_body) {
+    if (newVote) {
+      queryStr += ',';
+    }
     queryStr += ` review_body = $${valCount}`;
     queryValues.push(review_body);
     valCount++;
