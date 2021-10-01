@@ -3,7 +3,7 @@ const db = require('../db/connection');
 exports.fetchUsers = async () => {
   const result = await db.query(
     `
-        SELECT * FROM users;
+      SELECT * FROM users;
     `
   );
   return result.rows;
@@ -32,11 +32,11 @@ exports.insertNewUser = async (username, name, avatar_url) => {
 
   const result = await db.query(
     `
-    INSERT INTO users
-    (username,name,avatar_url)
-    VALUES
-    ($1, $2, $3)
-    RETURNING *;
+      INSERT INTO users
+      (username,name,avatar_url)
+      VALUES
+      ($1, $2, $3)
+      RETURNING *;
     `,
     [username, name, avatar_url]
   );
@@ -51,37 +51,31 @@ exports.updateUser = async (username, name, avatar_url) => {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
-  let queryStr = `
-  UPDATE users SET
-  `;
-  let queryValues = [];
+  let queryStr = 'UPDATE users SET';
+  let valCount = 1;
+  const queryValues = [];
 
   if (name) {
-    queryStr += 'name = $1';
+    queryStr += ` name = $${valCount}`;
     queryValues.push(name);
-
-    if (avatar_url) {
-      queryStr += `
-        , avatar_url = $2 
-        WHERE username = $3
-        RETURNING *;
-      `;
-      queryValues.push(avatar_url, username);
-    } else {
-      queryStr += `
-        WHERE username = $2
-        RETURNING *;
-      `;
-      queryValues.push(username);
-    }
-  } else if (!name && avatar_url) {
-    queryStr += `
-      avatar_url = $1
-      WHERE username = $2
-      RETURNING *;
-    `;
-    queryValues.push(avatar_url, username);
+    valCount++;
   }
+
+  if (avatar_url) {
+    if (name) {
+      queryStr += `,`;
+    }
+    queryStr += ` avatar_url = $${valCount}`;
+    queryValues.push(avatar_url);
+    valCount++;
+  }
+
+  queryStr += `
+      WHERE username = $${valCount}
+      RETURNING *;
+  `;
+  queryValues.push(username);
+
   const result = await db.query(queryStr, queryValues);
   return result.rows[0];
 };
