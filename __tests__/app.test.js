@@ -149,71 +149,76 @@ describe('/api', () => {
         });
       });
       describe('PATCH', () => {
-        test('200:responds with the updated review object, when passed an object specifying the number of votes to increment: { inc_votes: newVoteNum } ', async () => {
-          res = await request(app)
-            .patch('/api/reviews/12')
-            .send({ inc_votes: 20 })
-            .expect(200);
-          expect(res.body.review).toMatchObject({
-            owner: expect.any(String),
-            title: expect.any(String),
-            review_id: expect.any(Number),
-            review_body: expect.any(String),
-            designer: expect.any(String),
-            review_img_url: expect.any(String),
-            category: expect.any(String),
-            created_at: expect.any(String),
-            votes: '120',
+        describe('review votes', () => {
+          test('200:responds with the updated review object, when passed an object specifying the number of votes to increment: { inc_votes: newVoteNum } ', async () => {
+            res = await request(app)
+              .patch('/api/reviews/12')
+              .send({ inc_votes: 20 })
+              .expect(200);
+            expect(res.body.review).toMatchObject({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              review_img_url: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: '120',
+            });
           });
-        });
-        test('200:works for decrementing votes too', async () => {
-          res = await request(app)
-            .patch('/api/reviews/12')
-            .send({ inc_votes: -20 })
-            .expect(200);
-          expect(res.body.review).toMatchObject({
-            owner: expect.any(String),
-            title: expect.any(String),
-            review_id: expect.any(Number),
-            review_body: expect.any(String),
-            designer: expect.any(String),
-            review_img_url: expect.any(String),
-            category: expect.any(String),
-            created_at: expect.any(String),
-            votes: '80',
+          test('200:works for decrementing votes too', async () => {
+            res = await request(app)
+              .patch('/api/reviews/12')
+              .send({ inc_votes: -20 })
+              .expect(200);
+            expect(res.body.review).toMatchObject({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              review_img_url: expect.any(String),
+              category: expect.any(String),
+              created_at: expect.any(String),
+              votes: '80',
+            });
           });
-        });
-        test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
-          res = await request(app)
-            .patch('/api/reviews/a12')
-            .send({ inc_votes: -20 })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('404:responds with a "Not Found" message when passed a valid review_id that does not exist yet', async () => {
-          res = await request(app)
-            .patch('/api/reviews/20')
-            .send({ inc_votes: -10 })
-            .expect(404);
-          expect(res.body.msg).toBe('Not Found');
-        });
-        test('400:responds with a "Bad Request" message when passed an empty body', async () => {
-          res = await request(app).patch('/api/reviews/12').send().expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('400:responds with a "Bad Request" message when an invalid property name in the body', async () => {
-          res = await request(app)
-            .patch('/api/reviews/12')
-            .send({ votes: 10 })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
-        });
-        test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
-          res = await request(app)
-            .patch('/api/reviews/12')
-            .send({ inc_votes: 'A' })
-            .expect(400);
-          expect(res.body.msg).toBe('Bad Request');
+          test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
+            res = await request(app)
+              .patch('/api/reviews/a12')
+              .send({ inc_votes: -20 })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('404:responds with a "Not Found" message when passed a valid review_id that does not exist yet', async () => {
+            res = await request(app)
+              .patch('/api/reviews/20')
+              .send({ inc_votes: -10 })
+              .expect(404);
+            expect(res.body.msg).toBe('Not Found');
+          });
+          test('400:responds with a "Bad Request" message when passed an empty body', async () => {
+            res = await request(app)
+              .patch('/api/reviews/12')
+              .send()
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when an invalid property name in the body', async () => {
+            res = await request(app)
+              .patch('/api/reviews/12')
+              .send({ votes: 10 })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
+            res = await request(app)
+              .patch('/api/reviews/12')
+              .send({ inc_votes: 'A' })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
         });
       });
       describe('/comments', () => {
@@ -346,6 +351,7 @@ describe('/api', () => {
         });
       });
       describe('PATCH', () => {
+       describe('comment votes', () => {
         test('200:responds with the updated comment object, when passed an object specifying the number of votes to increment: { inc_votes: newVoteNum } ', async () => {
           const res = await request(app)
             .patch('/api/comments/3')
@@ -408,6 +414,7 @@ describe('/api', () => {
           expect(res.body.msg).toBe('Bad Request');
         });
       });
+       });
     });
   });
   describe('/users', () => {
@@ -515,6 +522,7 @@ describe('/api', () => {
         });
       });
       describe('PATCH', () => {
+       describe('name and avatar_url', () => {
         test('200:responds with the updated user object,when passed a request body with the name and avatar_url properties', async () => {
           const res = await request(app)
             .patch('/api/users/bainesface')
@@ -622,6 +630,7 @@ describe('/api', () => {
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
+       });
       });
     });
   });
