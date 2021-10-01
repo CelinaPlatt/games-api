@@ -10,11 +10,7 @@ exports.fetchUsers = async () => {
 };
 
 exports.fetchUserByUsername = async (username) => {
-  const hasInvalidChar = /[^a-z0-9\._]/i.test(username);
-
-  if (hasInvalidChar || username.length > 30) {
-    return Promise.reject({ status: 400, msg: 'Bad Request' });
-  }
+  await validateUserName(username);
 
   const result = await db.query(
     `
@@ -27,16 +23,10 @@ exports.fetchUserByUsername = async (username) => {
 };
 
 exports.insertNewUser = async (username, name, avatar_url) => {
-  const usernameIsInvalid = /[^a-z0-9\._]/i.test(username);
-  const nameIsInvalid = /[^a-z\s]/i.test(name);
+  await validateUserName(username);
+  await validateName(name);
 
-  if (
-    !username ||
-    !name ||
-    usernameIsInvalid ||
-    nameIsInvalid ||
-    username.length > 30
-  ) {
+  if (!username || !name) {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
@@ -54,16 +44,10 @@ exports.insertNewUser = async (username, name, avatar_url) => {
 };
 
 exports.updateUser = async (username, name, avatar_url) => {
-  const usernameIsInvalid = /[^a-z0-9\._]/i.test(username);
+  await validateUserName(username);
+  await validateName(name);
 
-  const nameIsInvalid = /[^a-z\s]/i.test(name);
-
-  if (
-    usernameIsInvalid ||
-    username.length > 30 ||
-    (!name && !avatar_url) ||
-    nameIsInvalid
-  ) {
+  if (!name && !avatar_url) {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
@@ -100,4 +84,18 @@ exports.updateUser = async (username, name, avatar_url) => {
   }
   const result = await db.query(queryStr, queryValues);
   return result.rows[0];
+};
+
+const validateUserName = async (username) => {
+  const hasInvalidChar = /[^a-z0-9\._]/i.test(username);
+  if (hasInvalidChar || username.length > 30) {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
+};
+
+const validateName = async (name) => {
+  const hasInvalidChar = /[^a-z\s]/i.test(name);
+  if (hasInvalidChar) {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
 };
