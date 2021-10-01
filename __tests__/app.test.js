@@ -514,6 +514,24 @@ describe('/api', () => {
           expect(res.body.msg).toBe('Bad Request');
         });
       });
+      describe('PATCH', () => {
+        test('200:responds with the updated user object,when passed a request body with the name and avatar_url properties', async () => {
+          const res = await request(app)
+            .patch('/api/users/bainesface')
+            .send({
+              name: 'Diana',
+              avatar_url:
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
+            })
+            .expect(200);
+          expect(res.body.user).toMatchObject({
+            username: 'bainesface',
+            name: 'Diana',
+            avatar_url:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
+          });
+        });
+      });
     });
   });
 });

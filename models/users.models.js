@@ -52,3 +52,36 @@ exports.insertNewUser = async (username, name, avatar_url) => {
   );
   return result.rows[0];
 };
+
+exports.updateUser = async (username, name, avatar_url) => {
+  let queryStr = `
+  UPDATE users SET
+  `;
+  let queryValues = [];
+  if (name) {
+    queryStr += 'name = $1';
+    queryValues.push(name);
+    if (avatar_url) {
+      queryStr += `
+        , avatar_url = $2 
+        WHERE username = $3
+        RETURNING *;
+      `;
+      queryValues.push(avatar_url, username);
+    } else {
+      queryStr += `
+        WHERE username = $2
+        RETURNING *;
+      `;
+    }
+  } else if (!name && avatar_url) {
+    queryStr += `
+      avatar_url = $1
+      WHERE username = $2
+      RETURNING *;
+    `;
+    queryValues.push(avatar_url, username);
+  }
+  const result = await db.query(queryStr, queryValues);
+  return result.rows[0];
+};
