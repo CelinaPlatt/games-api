@@ -257,7 +257,42 @@ describe('/api', () => {
               created_at: expect.any(String),
               votes: '15',
             });
-          });    
+          });
+          test('400:responds with a "Bad Request" message when passed an invalid review_id', async () => {
+            const res = await request(app)
+              .patch('/api/reviews/a12')
+              .send({ review_body: 'Not suitable for the clumsy' })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('404:responds with a "Not Found" message when passed a valid but non-existent review_id', async () => {
+            const res = await request(app)
+              .patch('/api/reviews/20')
+              .send({ review_body: 'Not suitable for the clumsy' })
+              .expect(404);
+            expect(res.body.msg).toBe('Not Found');
+          });
+          test('400:responds with a "Bad Request" message when passed an empty body', async () => {
+            const res = await request(app)
+              .patch('/api/reviews/2')
+              .send()
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when an invalid property name in the body', async () => {
+            const res = await request(app)
+              .patch('/api/reviews/2')
+              .send({ reviewbody: 'Not suitable for the clumsy' })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
+          test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
+           const res = await request(app)
+              .patch('/api/reviews/2')
+              .send({ review_body: 34 })
+              .expect(400);
+            expect(res.body.msg).toBe('Bad Request');
+          });
         });
       });
       describe('/comments', () => {
@@ -673,4 +708,3 @@ describe('/api', () => {
     });
   });
 });
-

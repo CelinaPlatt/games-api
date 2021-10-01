@@ -21,7 +21,7 @@ exports.fetchReviewsById = async (review_id) => {
 };
 
 exports.updateReviewById = async (review_id, newVote, review_body) => {
-  if (!newVote && !review_body) {
+  if (!newVote && typeof review_body !== 'string') {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
