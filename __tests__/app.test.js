@@ -503,7 +503,7 @@ describe('/api', () => {
               created_at: expect.any(String),
             });
           });
-          test('200:works to update both `review_body` and `votes` properties', async () => {
+          test('200:works to update both `body` and `votes` properties', async () => {
             const res = await request(app)
               .patch('/api/comments/1')
               .send({
