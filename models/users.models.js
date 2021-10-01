@@ -54,6 +54,12 @@ exports.insertNewUser = async (username, name, avatar_url) => {
 };
 
 exports.updateUser = async (username, name, avatar_url) => {
+  const usernameIsInvalid = /[^a-z0-9\._]/i.test(username);
+
+  if (usernameIsInvalid) {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
+
   let queryStr = `
   UPDATE users SET
   `;

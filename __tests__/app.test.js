@@ -531,6 +531,17 @@ describe('/api', () => {
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
           });
         });
+        test('400:responds with a "Bad Request" message when passed an invalid username - has spaces, special characters (other than "_" and ".") or is longer than 30 chars', async () => {
+          const res = await request(app)
+            .patch('/api/users/baines*face')
+            .send({
+              name: 'Diana',
+              avatar_url:
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQooyy5MoRtUjS67Oy4S_8a0yt4gmzB3CWnoA&usqp=CAU',
+            })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
       });
     });
   });
