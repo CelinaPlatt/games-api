@@ -15,10 +15,18 @@ exports.deleteCommentById = async (req, res, next) => {
 
 exports.patchCommentById = async (req, res, next) => {
   const { comment_id } = req.params;
-  const { inc_votes } = req.body;
+  const { inc_votes, body } = req.body;
   try {
-    const patchedCommentData = await updateCommentById(comment_id, inc_votes);
-    res.status(200).send({ comment: patchedCommentData });
+    const patchedCommentData = await updateCommentById(
+      comment_id,
+      inc_votes,
+      body
+    );
+    if (patchedCommentData) {
+      res.status(200).send({ comment: patchedCommentData });
+    } else {
+      await Promise.reject({ status: 404, msg: 'Not Found' });
+    }
   } catch (err) {
     next(err);
   }

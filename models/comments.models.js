@@ -4,9 +4,9 @@ exports.deleteFromByCommentId = async (comment_id) => {
   await checkCommentExists(comment_id);
   const result = await db.query(
     `
-        DElETE FROM comments
-        WHERE comment_id = $1;
-        `,
+      DElETE FROM comments
+      WHERE comment_id = $1;
+    `,
     [comment_id]
   );
   return result.rows[0];
@@ -15,8 +15,8 @@ exports.deleteFromByCommentId = async (comment_id) => {
 const checkCommentExists = async (comment_id) => {
   const result = await db.query(
     `
-        SELECT * FROM comments
-        WHERE comment_id = $1;
+      SELECT * FROM comments
+      WHERE comment_id = $1;
     `,
     [comment_id]
   );
@@ -26,20 +26,19 @@ const checkCommentExists = async (comment_id) => {
   }
 };
 
-exports.updateCommentById = async (comment_id, newVote) => {
-  await checkCommentExists(comment_id);
-  if (newVote) {
-    const result = await db.query(
-      `
+exports.updateCommentById = async (comment_id, newVote, body) => {
+  if (!newVote && !body) {
+    return Promise.reject({ status: 400, msg: 'Bad Request' });
+  }
+
+  const result = await db.query(
+    `
         UPDATE comments
         SET votes = votes + $1
         WHERE comment_id = $2 
         RETURNING *;
     `,
-      [newVote, comment_id]
-    );
-    return result.rows[0];
-  } else {
-    return Promise.reject({ status: 400, msg: 'Bad Request' });
-  }
+    [newVote, comment_id]
+  );
+  return result.rows[0];
 };
