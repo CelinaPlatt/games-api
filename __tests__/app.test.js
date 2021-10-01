@@ -520,6 +520,20 @@ describe('/api', () => {
             });
           });
         });
+        test('400:responds with a "Bad Request" message when passed an invalid comment_id', async () => {
+          const res = await request(app)
+            .patch('/api/comments/a12')
+            .send({ body: 'aMEOWzing!' })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('404:responds with a "Not Found" message when passed a valid but non-existent comment_id', async () => {
+          const res = await request(app)
+            .patch('/api/comments/20')
+            .send({ body: 'aMEOWzing!' })
+            .expect(404);
+          expect(res.body.msg).toBe('Not Found');
+        });
       });
     });
   });
