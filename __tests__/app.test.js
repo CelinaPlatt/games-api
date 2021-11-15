@@ -534,6 +534,27 @@ describe('/api', () => {
             .expect(404);
           expect(res.body.msg).toBe('Not Found');
         });
+        test('400:responds with a "Bad Request" message when passed an empty body', async () => {
+          const res = await request(app)
+            .patch('/api/comments/1')
+            .send()
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when an invalid property name in the body', async () => {
+          const res = await request(app)
+            .patch('/api/comments/1')
+            .send({ commentbody: 'aMEOWzing!' })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
+        test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
+         const res = await request(app)
+            .patch('/api/comments/1')
+            .send({  body: 465 })
+            .expect(400);
+          expect(res.body.msg).toBe('Bad Request');
+        });
       });
     });
   });

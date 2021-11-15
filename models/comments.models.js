@@ -27,7 +27,7 @@ const checkCommentExists = async (comment_id) => {
 };
 
 exports.updateCommentById = async (comment_id, newVote, body) => {
-  if (!newVote && !body) {
+  if (!newVote && typeof body !== 'string') {
     return Promise.reject({ status: 400, msg: 'Bad Request' });
   }
 
