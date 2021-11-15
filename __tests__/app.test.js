@@ -21,6 +21,12 @@ describe('/api', () => {
           'PATCH /api/reviews/:review_id',
           'GET /api/reviews/:review_id/comments',
           'POST /api/reviews/:review_id/comments',
+          'PATCH /api/comments/:comment_id',
+          'DELETE /api/comments/:comment_id',
+          'GET /api/users',
+          'GET /api/users/:username',
+          'PATCH /api/users/:username',
+          'POST /api/users/:username',
         ]);
       });
     });
@@ -549,9 +555,9 @@ describe('/api', () => {
           expect(res.body.msg).toBe('Bad Request');
         });
         test('400:responds with a "Bad Request" message when passed an invalid property value in the body', async () => {
-         const res = await request(app)
+          const res = await request(app)
             .patch('/api/comments/1')
-            .send({  body: 465 })
+            .send({ body: 465 })
             .expect(400);
           expect(res.body.msg).toBe('Bad Request');
         });
