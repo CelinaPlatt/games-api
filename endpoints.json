@@ -53,21 +53,24 @@
     }
   },
   "PATCH /api/reviews/:review_id": {
-    "description": "serves the updated review object",
+    "description": "updates the body and/or votes of the specified review, serves the updated review object",
     "queries": [],
-    "exampleRequest": { "inc_votes": -3 },
+    "exampleRequest": {
+      "review_body": "Not suitable for the clumsy",
+      "inc_votes": 10
+    },
     "exampleResponse": {
       "review": {
         "review_id": 4,
         "title": "One Night Ultimate Werewolf",
-        "review_body": "We couldn't find the werewolf!",
+        "review_body": "Not suitable for the clumsy",
         "designer": "Akihisa Okui",
         "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
         "votes": "2",
         "category": "hidden-roles",
         "owner": "happyamy2016",
         "created_at": "2021-01-18T10:01:41.251Z",
-        "comment_count": 4
+        "comment_count": 14
       }
     }
   },
@@ -105,6 +108,84 @@
           "body": "My dog loved this game too!"
         }
       ]
+    }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "updates the body and/or votes of the specified comment,serves the updated comment object",
+    "queries": [],
+    "exampleRequest": {
+      "inc_votes": -2,
+      "body": "aMEOWzing!"
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 2,
+        "author": "tickle122",
+        "review_id": 4,
+        "votes": "1",
+        "created_at": "2021-01-18T10:09:05.410Z",
+        "body": "aMEOWzing!"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment from database, responds with an empty body",
+    "queries": [],
+    "exampleResponse": {}
+  },
+  "GET /api/users": {
+    "description": "serves an array of user objects",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": "https://www.spiritsurfers.net/monastery/wp-content/uploads/_41500270_mrtickle.jpg"
+        }
+      ]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "serves the specified single user object",
+    "queries": [],
+    "exampleResponse": {
+      "user": {
+        "username": "tickle122",
+        "name": "Tom Tickle",
+        "avatar_url": "https://www.spiritsurfers.net/monastery/wp-content/uploads/_41500270_mrtickle.jpg"
+      }
+    }
+  },
+  "PATCH /api/users/:username": {
+    "description": "updates the name and/or avatar_url of the specified users,serves the updated user object",
+    "queries": [],
+    "exampleRequest": {
+      "name": "Tom Tick",
+      "avatar_url": "https://images-na.ssl-images-amazon.com/images/I/71u2qhkcalL.jpg"
+    },
+    "exampleResponse": {
+      "user": {
+        "username": "tickle122",
+        "name": "Tom Tick",
+        "avatar_url": "https://images-na.ssl-images-amazon.com/images/I/71u2qhkcalL.jpg"
+      }
+    }
+  },
+  "POST /api/users/:username": {
+    "description": "serves the newly posted user object. Username must be less than 30 alphanumeric characters,no spaces or special characters(other than '_' and '.')",
+    "queries": [],
+    "exampleRequest": {
+      "username": "Pete.P",
+      "name": "Peter Petterson",
+      "avatar_url": "https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg"
+    },
+    "exampleResponse": {
+      "user": {
+        "username": "Pete.P",
+        "name": "Peter Petterson",
+        "avatar_url": "https://pbs.twimg.com/media/E2QjFLiVcAQI-pi.jpg"
+      }
     }
   }
 }
