@@ -5,7 +5,7 @@ exports.getApiEndpoints = async (req, res, next) => {
     const endpointsIndexData = await readEndpointsJson();
     res.status(200).send({
       'Welcome to Game Critic API!':
-        'Please find below the available end points with their corresponding request and response example',
+        'Please find below the available endpoints and their corresponding request and response examples',
       endpoints: endpointsIndexData,
     });
   } catch (err) {
