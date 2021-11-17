@@ -172,7 +172,7 @@
       }
     }
   },
-  "POST /api/users/:username": {
+  "POST /api/users": {
     "description": "serves the newly posted user object. Username must be less than 30 alphanumeric characters,no spaces or special characters(other than '_' and '.')",
     "queries": [],
     "exampleRequest": {
