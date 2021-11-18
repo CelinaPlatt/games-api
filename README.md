@@ -1,7 +1,4 @@
 # Game Critic API
-game-critic.herokuapp.com/api/
-
----
 
 
 ## Project Summary
@@ -11,7 +8,12 @@ This API was built for the purpose of accessing application data programmaticall
 The database is **_PSQL_** and is interacted with using **_node-postgres_**
 
 &ensp; 
-## Try the [hosted version](https://game-critic.herokuapp.com/api/)
+## Visit the API [hosted in Heroku](https://game-critic.herokuapp.com/api/)
+
+The main endpoint serves up an index of all the available endpoints in the api and their corresponding request and response examples.
+
+&ensp; 
+![](./api.png)
 
 &ensp; 
 ## How to run it locally
@@ -74,3 +76,5 @@ v16.5.0
 #### Minimum version of `Postgres`
 
 psql (PostgreSQL) 12.8
+
+
