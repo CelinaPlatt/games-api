@@ -26,7 +26,7 @@ describe('/api', () => {
           'GET /api/users',
           'GET /api/users/:username',
           'PATCH /api/users/:username',
-          'POST /api/users/:username',
+          'POST /api/users/',
         ]);
       });
     });
